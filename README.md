@@ -2,7 +2,7 @@
 
 The code for Indianola Robotics' (FTC team 8938) first robot of the BIOBUZZ season. It is the FTC SDK
 (FtcRobotController 12.0) with our helper library, [ftc-helper-lib](https://github.com/crossbotics/ftc-helper-lib),
-in the `ftc-helper-lib` folder (a git submodule). **Library version: v0.22.0** (`git submodule status`
+in the `ftc-helper-lib` folder (a git submodule). **Library version: v0.25.0** (`git submodule status`
 shows it). The team's step-by-step pages (https://crossbotics.com/teams/8938-octobots/) match this version.
 
 ## Get it
@@ -139,7 +139,7 @@ to date".
 
 ```bash
 git -C ftc-helper-lib fetch --tags
-git -C ftc-helper-lib checkout v0.22.0        # the new version's tag (an example)
+git -C ftc-helper-lib checkout v0.25.0        # the new version's tag (an example)
 ./gradlew :TeamCode:assembleDebug             # build; fix what the CHANGELOG says
 ```
 
