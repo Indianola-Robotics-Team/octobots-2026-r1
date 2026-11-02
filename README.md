@@ -47,12 +47,13 @@ and is pushed over by a servo at START (then gravity holds it on a hard stop), O
 rollers (90 mm and 60 mm taking turns), two goBILDA 72 mm Boot-Wheel spinners at the front corners driven
 from the intake through miter gears, a flywheel on a sliding mount (so a NECTAR fits), and a ramp that sends
 shots out of the back. Device names are goBILDA's (`left_drive`, `right_drive`, `intake`, `launcher`,
-`windmill`) plus `intake_deploy` (the deploy servo).
+`windmill`: a goBILDA Speed servo set to spin, it feeds a POLLEN into the flywheel) plus `intake_deploy`
+(the deploy servo). v1 shoots POLLEN only, for now.
 
 **Buttons (R1 TeleOp, one driver on gamepad 1):** left stick drive, right stick X turn; **LT slow** (the
 further you pull it, the slower, like last season); left stick click slow on/off. **B** intake on/off,
-double-tap B pushes out until the next tap (the intake starts by itself once it is deployed). **LB**
-flywheel on/off (it spins up at START), **RB** fires one (hold to keep firing), D-pad up/down flywheel
+double-tap B pushes out until the next tap (the intake starts by itself once it is deployed). The flywheel spins
+up at START and stays at speed. **LB** lets it coast (when parked; again: spin up), **RB** fires one POLLEN (hold to keep firing), D-pad up/down flywheel
 speed. **X** deploys the intake again. **BACK** pauses everything (again: go on). **GUIDE** shows this
 map (hold GUIDE 1 s after START, PRACTICE profile: the tuning menu). Free: A, Y, RT, D-pad left/right.
 **Four pieces at most** (rule G407): nothing in the code stops the intake at 4 (`holds(4)` only tells
@@ -183,8 +184,7 @@ to the robot file.
 ```
 
 No windmill on the robot? It is `optional()` too: leave `windmill` out of the robot configuration. INIT
-says the feeder is off, the flywheel still spins, and the intake pushes the pieces up the scoop into the
-wheel (RB feeds nothing). `r1-no-windmill.sim` checks this (`set device windmill missing`).
+says the feeder is off, the flywheel still spins, and RB feeds nothing. `r1-no-windmill.sim` checks this (`set device windmill missing`).
 
 Drive it in a browser (then open http://localhost:8780 and pick "R1 TeleOp"):
 
