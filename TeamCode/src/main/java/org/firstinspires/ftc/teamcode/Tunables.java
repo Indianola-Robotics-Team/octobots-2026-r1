@@ -21,7 +21,7 @@ public class Tunables {
         public static double maxPower = DEFAULT;                       // top wheel power at events, 0 to 1 (1.0)
         public static double practiceMaxPower = DEFAULT;               // top wheel power in PRACTICE (0.6)
         public static double slowSpeed = DEFAULT;                      // top power with the slow trigger held (0.3)
-        public static double strafeCorrection = DEFAULT;               // not used: a tank drive cannot strafe
+        public static double strafeCorrection = DEFAULT;               // strafing: more push sideways (1.15; the Drive Tuner finds it)
         public static double turnKp = DEFAULT;                         // auto turns: push per degree off (0.012)
         public static double turnKd = DEFAULT;                         // auto turns: brake near the end (0.003)
         public static double moveMinPower = DEFAULT;                   // auto: least power that moves it (0.30)

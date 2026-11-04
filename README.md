@@ -32,26 +32,30 @@ How the library works: `ftc-helper-lib/docs/modules/robot.md`; short "how do I..
 every check and finder for this robot in one menu: D-pad up/down to pick, **A** to open, **START** to run;
 STOP, then INIT, for the next one. For robot 1 it lists the **Hardware Check** (every device found, each
 motor turns, the IMU), the **Servo Finder** (the deploy servo's positions), the **Flywheel Finder** (the
-launcher's kP..kF), the **Drive Tuner** (the wheel size, for the autonomous) and the **Shot Tuner** (not
+launcher's kP..kF), the **Drive Tuner** (the wheel size and the strafe correction, for the autonomous) and the **Shot Tuner** (not
 used by robot 1: it shoots from one spot). They show the lines to copy into `Tunables.java` or
 `Robot.java`. One file of our own stays in `finders/`: **R1 Motor Direction Check** (robot on a block:
-X = left, Y = right, each wheel must roll forward), because it uses our drive's `.reversed(...)`.
+X = front left, Y = front right, A = back left, B = back right; each wheel must roll forward), because it
+uses our drive's directions from `Robot.java`.
 The full first-time order, with what "pass" means at each step: the team pages' Part C,
 "The first robot sessions" (https://crossbotics.com/teams/8938-octobots/robot/).
 How: `ftc-helper-lib/docs/guides/finders.md`.
 
 ## Version 1
 
-goBILDA's BIOBUZZ starter bot (3200-2627-0003) with our changes: an intake that folds up at the start
-and is pushed over by a servo at START (then gravity holds it on a hard stop), Offset surgical tubing
-rollers (90 mm and 60 mm taking turns), two goBILDA 72 mm Boot-Wheel spinners at the front corners driven
-from the intake through miter gears, a flywheel on a sliding mount (so a NECTAR fits), and a ramp that sends
-shots out of the back. Device names are goBILDA's (`left_drive`, `right_drive`, `intake`, `launcher`,
-`feeder`: a goBILDA Speed servo set to spin, it feeds a POLLEN into the flywheel) plus `intake_deploy`
-(the deploy servo). v1 shoots POLLEN only, for now.
+A goBILDA **Strafer** chassis (3209-0001-0007): four 312 RPM motors and 104 mm GripForce **mecanum**
+wheels (wheels with small rollers at 45 degrees), so the robot can also **strafe** (drive sideways without
+turning). On it: an intake that folds up at the start and is pushed over by a servo at START (then gravity
+holds it on a hard stop), Offset surgical tubing rollers (90 mm and 60 mm taking turns), two goBILDA 72 mm
+Boot-Wheel spinners at the front corners driven from the intake through miter gears, a flywheel on a
+sliding mount, a **feeder** (Gecko wheels on a goBILDA Speed servo set to spin: it pushes one POLLEN into
+the flywheel), and a ramp that sends shots out of the back. Robot 1 handles **POLLEN only**.
+Device names: `front_left`, `front_right`, `back_left`, `back_right`, `imu`, `intake`, `intake_deploy`
+(the deploy servo), `launcher`, `feeder`.
 
-**Buttons (R1 TeleOp, one driver on gamepad 1):** left stick drive, right stick X turn; **LT slow** (the
-further you pull it, the slower, like last season); left stick click slow on/off. **B** intake on/off,
+**Buttons (R1 TeleOp, one driver on gamepad 1):** left stick drive and strafe, right stick X turn; **LT
+slow** (the further you pull it, the slower, like last season); left stick click slow on/off; right stick
+click field-centric on/off (forward = away from the driver, however the robot faces). **B** intake on/off,
 double-tap B pushes out until the next tap (the intake starts by itself once it is deployed). The flywheel spins
 up at START and stays at speed. **LB** lets it coast (when parked; again: spin up), **RB** fires one POLLEN (hold to keep firing), D-pad up/down flywheel
 speed. **X** deploys the intake again. **BACK** pauses everything (again: go on). **GUIDE** shows this
@@ -59,19 +63,19 @@ map (hold GUIDE 1 s after START, PRACTICE profile: the tuning menu). Free: A, Y,
 **Four pieces at most** (rule G407): nothing in the code stops the intake at 4 (`holds(4)` only tells
 the simulator), so the driver taps **B** (intake off) when the robot is full.
 
-**Still estimates (marked "est." in Robot.java):** the intake's hinge and arm, the spinners' place (goBILDA
+**Still estimates (marked "est." in Robot.java):** the Strafer's sizes (chassis box, track, wheelbase), the intake's hinge and arm, the spinners' place (goBILDA
 72 mm Boot-Wheels, flush with the roller and low, from photos; the roller's tubing is soft in the simulator), the
 deploy servo's arm, the flywheel slide, the ramp, the shot angle. Measure the robot and replace them.
 **Still to find on the robot**, in this order:
 1. **Tune and check > Hardware Check**: every device found, each motor and servo turns. Then
-   **R1 Motor Direction Check** (robot on a block): each drive wheel rolls forward.
+   **R1 Motor Direction Check** (robot on a block): all four drive wheels roll forward.
 2. How the Control Hub is mounted (`imu(...)` in Robot.java: the way its logo and USB port face).
 3. The deploy servo's positions with **Tune and check > Servo Finder** (`Tunables.IntakeDeploy`: `stowed`,
    `deployed`). `travelSec` is the time for a full 0-to-1 move (now from the servo's catalog speed):
    keep it, or time the push and divide by `deployed - stowed`.
 4. The flywheel's numbers with **Tune and check > Flywheel Finder** (`Tunables.Launcher` kP..kF: today goBILDA's),
    and the feeder's `feedSec` (the library's 0.4 s for now: watch it feed one piece, never two).
-5. The wheel size with **Tune and check > Drive Tuner**, then `Tunables.Drive.calibrated = true` (until then the
+5. The wheel size and the strafe correction with **Tune and check > Drive Tuner**, then `Tunables.Drive.calibrated = true` (until then the
    autonomous refuses to run).
 6. The shot: its real launch angle and speed (see "The autonomous" below), then the start spot.
 7. Every number marked "est." or GUESS in Robot.java (measure the robot), then remake the simulator's
@@ -104,7 +108,7 @@ shot is 115 degrees. At 65 degrees the speed matters: the simulator's exit speed
 speed, so goBILDA's 2679 RPM is about 265 in/s and misses. `Tunables.Launcher.speedRpm` is now **2275 RPM**
 (225 in/s), which scores 4 of 4. Find the real speed on the robot once the ramp is 65 degrees.
 
-**Route** (tank: turns, forward and back only; numbers in `Tunables.Auto`): back 4 in off the wall,
+**Route** (turns, forward and back only: no strafing needed; numbers in `Tunables.Auto`): back 4 in off the wall,
 fire all four (the intake stays folded until now: at START it would fall onto the wall, so the auto
 sets `Robot.deployAtStart = false`); turn 45 degrees left, push the intake over, back 85.5 in along
 our wall past our FLOWER; turn to face the far wall and back 12.6 in into the LOADING ZONE. It ends

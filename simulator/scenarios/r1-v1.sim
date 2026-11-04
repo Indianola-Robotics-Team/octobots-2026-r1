@@ -1,5 +1,5 @@
-# Robot 1 v1: it fits the size rules, the intake drops at START and stays down, the intake and the
-# launcher answer the buttons (B, RB, LB), and a held piece is fired.
+# Robot 1 v1: it fits the size rules, the intake drops at START and stays down, it strafes (mecanum),
+# the intake and the launcher answer the buttons (B, RB, LB), and a held piece is fired.
 # Run it: the "Simulator tests" button in Android Studio (all tests), or from the ftc-helper-lib folder:
 #   ./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-v1.sim
 robot ../robot.properties
@@ -14,6 +14,16 @@ expect within 3 shape intake_arm = -40 0.1    # pushed over: down on its stop
 expect within 3 servo intake_deploy actual < 0.05   # the servo went back
 expect shape intake_arm = -40 0.1      # and the intake stays down
 expect size match ok                   # deployed: 18 x 24 x 29 in
+hold g1.left_stick_x 0.6               # strafe right (TeleOp starts on BLUE: x 56, y 61.1, facing the red wall)
+wait 1
+release all
+expect within 1 robot x < 48           # it moved sideways...
+expect robot y = 61.1 0.5              # ...not forward or back
+expect robot heading = -180 3          # ...and did not turn
+hold g1.left_stick_x -0.6              # strafe back for the pick-up below
+wait 1
+release all
+expect within 1 robot x > 52
 set preload off                        # start empty, so the pick-up below is a real one
 expect stored = 0
 set piece POLLEN 56 50                  # a POLLEN 11 in ahead of the robot (TeleOp starts on BLUE: x 56, y 61.1)

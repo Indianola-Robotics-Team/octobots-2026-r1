@@ -13,8 +13,8 @@ init "R1 Launch and Park"
 press g1.b                                 # RED
 wait 0.5                                   # the robot is placed on the chosen side
 expect screen has "Place robot : Nose corner on wall 20.5in from R, back at HIVE"
-expect robot x = 52 0.3                    # the start spot (RED: the simulator's field numbers are ours)
-expect robot y = -59.45 0.3                # front-right corner on the red wall (G304)
+expect robot x = 51.6 0.3                    # the start spot (RED: the simulator's field numbers are ours)
+expect robot y = -58.5 0.3                # front-right corner on the red wall (G304)
 expect robot heading = -142.2 1            # the back aimed at the HIVE's up CELL
 expect stored = 4                          # four preloaded
 expect shape intake_arm = 95 0.1           # folded (inside the 18 in cube)

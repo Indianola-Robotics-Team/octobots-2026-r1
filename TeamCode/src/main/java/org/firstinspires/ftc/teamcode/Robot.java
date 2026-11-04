@@ -12,9 +12,9 @@ import com.crossbotics.ftchelper.robot.RobotDefinition;
 import com.crossbotics.ftchelper.robot.Shape;
 
 /**
- * Robot 1, version 1 (file 1 of 5): WHAT is on the robot. goBILDA's BIOBUZZ starter bot (3200-2627-0003)
- * with our changes: a folding intake that a servo pushes over at START, tubing rollers, two corner
- * spinners, and a sliding flywheel mount. Shots leave up a ramp out of the BACK.
+ * Robot 1, version 1 (file 1 of 5): WHAT is on the robot. A goBILDA Strafer chassis (mecanum wheels: it
+ * also drives sideways), a folding intake that a servo pushes over at START, tubing rollers, two corner
+ * spinners, and a flywheel fed by Gecko wheels. POLLEN only. Shots leave up a ramp out of the BACK.
  * Sizes and places in mm: forward, left, up from the chassis middle on the tiles, or from the shape it rides on.
  * "est." = an estimate (CAD or photos): measure ours. More: https://crossbotics.com/teams/8938-octobots/build/
  */
@@ -28,17 +28,17 @@ public class Robot extends RobotDefinition {
 
     @Override
     protected void define() {
-        // The drive: one 312 RPM motor per side, 96 mm wheels; the right motor runs reversed.
-        // "left_drive", "right_drive", "imu" = names in the robot configuration (Driver Station), exactly.
-        drive(Drive.tank("left_drive", "right_drive")
-                .motor("gobilda-5203-312").wheel("gobilda-hogback-96")
-                .wheelsAtMm(402, 288)
-                .reversed("right_drive")
+        // The drive: the Strafer's four 312 RPM motors and 104 mm GripForce mecanum wheels. Order: FL, FR, BL, BR.
+        // The library reverses the left side (front_left, back_left): R1 Motor Direction Check checks it.
+        // "front_left" ... "imu" = names in the robot configuration (Driver Station), exactly.
+        drive(Drive.mecanum("front_left", "front_right", "back_left", "back_right")
+                .motor("gobilda-5203-312").wheel("gobilda-gripforce-mecanum-104")
+                .wheelsAtMm(400, 336)   // track (left-right), wheelbase (front-back), wheel centres: est., measure ours
                 // TODO check how our Control Hub is mounted: the way its logo and USB port face.
                 .imu("imu", LogoFacingDirection.UP, UsbFacingDirection.FORWARD));
 
-        // The chassis box and the whole robot's height, mm (goBILDA's CAD).
-        chassisMm(384, 426, 97);
+        // The chassis box (length, width with the wheels, height) and the whole robot's height, mm. est.
+        chassisMm(432, 440, 80);
         heightMm(305);
 
         // The deploy servo: pushes the folded intake over at START. optional(): the robot runs without it.
@@ -63,9 +63,9 @@ public class Robot extends RobotDefinition {
         intake = add(Intake.motor("intake").part("gobilda-5203-117").holds(4)
                 .looks(intakeArm, roller, leftSpinner, rightSpinner));
 
-        // The launcher: one 96 mm wheel. Shots leave up the back ramp. v1 shoots POLLEN only (for now).
-        // The "feeder" CR servo (a goBILDA Speed servo set to spin) feeds the POLLEN into the wheel; optional(): the robot runs without it.
-        // Two shapes: its sliding mount (a NECTAR fits too) and the wheel riding on it.
+        // The launcher: one 96 mm wheel. Shots leave up the back ramp. Robot 1 shoots POLLEN only.
+        // The "feeder" CR servo (a goBILDA Speed servo set to spin) turns Gecko wheels that push the POLLEN into the wheel; optional(): the robot runs without it.
+        // Two shapes: its sliding mount and the wheel riding on it.
         // "launcher", "feeder" = names in the robot configuration. Numbers: Tunables.Launcher, .Feeder.
         Shape launcherSlide = Shape.slide().name("launcher_slide").atMm(-40, -5, 120).sizeMm(30, 30, 48)
                 .passive().travelMm(20).note("est.");
@@ -76,7 +76,7 @@ public class Robot extends RobotDefinition {
                 .looks(launcherSlide, flywheel)
                 .shotAngle(115));   // 65° up from the floor, out of the back (the planned ramp; the built one is 53°)
 
-        // Parts that do not move: goBILDA's tower behind the launcher, and our ramp out of the back.
+        // Parts that do not move: the tower behind the launcher, and our ramp out of the back (est.).
         fixed(Shape.box("tower").atMm(-88, 0, 40).sizeMm(48, 184, 264),
               Shape.box("ramp").atMm(-180, 0, 200).sizeMm(120, 150, 10).tiltDeg(-65));   // 65° up from the floor toward the back (planned; built at 53°), like the shots (115°)
 

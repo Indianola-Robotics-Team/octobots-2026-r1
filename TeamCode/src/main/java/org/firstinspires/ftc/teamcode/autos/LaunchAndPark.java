@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.Tunables;
  * opening faces the audience side, so a shot must come down into it from that side; from this spot, in
  * the simulator, a steep shot goes in cleanly 90-98 % of the time (README, "The autonomous").
  *
- * Route (tank drive: turns, forward and back only; the numbers are in Tunables.Auto):
+ * Route (turns, forward and back only, no strafing; the numbers are in Tunables.Auto):
  * 1. back 4 in off the wall (toward the HIVE), then fire all four. The intake stays folded until
  *   later: at START it would fall onto the wall (Robot.deployAtStart).
  * 2. turn 45 degrees left, push the intake over (clear of the walls now), back 85.5 in along our
@@ -30,7 +30,7 @@ import org.firstinspires.ftc.teamcode.Tunables;
 @Autonomous(name = "R1 Launch and Park", preselectTeleOp = "R1 TeleOp")
 public class LaunchAndPark extends Auto<Robot> {
     /** Where it starts: inches right of centre, inches from centre toward the far wall, field heading. */
-    static final double START_X = 52, START_Y = -59.45, START_HEADING = -142.2;
+    static final double START_X = 51.6, START_Y = -58.5, START_HEADING = -142.2;
     /** Field heading while backing along our wall to the LOADING ZONE, and when parked. */
     static final double ALONG_WALL_HEADING = -97.6, PARK_HEADING = 0;
 
