@@ -55,8 +55,8 @@ public class Tunables {
         public static boolean batteryCompensation = false;             // off until proven on a real robot
     }
 
-    public static class Windmill {                                     // "windmill" in the configuration
-        public static double power = DEFAULT;                          // windmill power, 0 to 1 (1.0)
+    public static class Feeder {                                       // "feeder" in the configuration
+        public static double power = DEFAULT;                          // feeder power, 0 to 1 (1.0)
         public static double feedSec = DEFAULT;                        // run time for one piece (0.4)
     }
 

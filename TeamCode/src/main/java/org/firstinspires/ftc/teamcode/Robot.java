@@ -64,14 +64,14 @@ public class Robot extends RobotDefinition {
                 .looks(intakeArm, roller, leftSpinner, rightSpinner));
 
         // The launcher: one 96 mm wheel. Shots leave up the back ramp. v1 shoots POLLEN only (for now).
-        // The "windmill" CR servo (a goBILDA Speed servo set to spin) feeds the POLLEN into the wheel; optional(): the robot runs without it.
+        // The "feeder" CR servo (a goBILDA Speed servo set to spin) feeds the POLLEN into the wheel; optional(): the robot runs without it.
         // Two shapes: its sliding mount (a NECTAR fits too) and the wheel riding on it.
-        // "launcher", "windmill" = names in the robot configuration. Numbers: Tunables.Launcher, .Windmill.
+        // "launcher", "feeder" = names in the robot configuration. Numbers: Tunables.Launcher, .Feeder.
         Shape launcherSlide = Shape.slide().name("launcher_slide").atMm(-40, -5, 120).sizeMm(30, 30, 48)
                 .passive().travelMm(20).note("est.");
         Shape flywheel = Shape.flywheel("gobilda-hogback-96").on("launcher_slide").atMm(0, 0, 48);
         launcher = add(Launcher.flywheel("launcher", "gobilda-5203-6000")
-                .feeder(Indexer.crServo("windmill").part("gobilda-2000-speed").reversed().optional())
+                .feeder(Indexer.crServo("feeder").part("gobilda-2000-speed").reversed().optional())
                 .spinAtStart()   // at speed from START and between shots, ready to fire (LB lets it coast to park)
                 .looks(launcherSlide, flywheel)
                 .shotAngle(115));   // 65° up from the floor, out of the back (the planned ramp; the built one is 53°)

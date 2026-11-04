@@ -47,7 +47,7 @@ and is pushed over by a servo at START (then gravity holds it on a hard stop), O
 rollers (90 mm and 60 mm taking turns), two goBILDA 72 mm Boot-Wheel spinners at the front corners driven
 from the intake through miter gears, a flywheel on a sliding mount (so a NECTAR fits), and a ramp that sends
 shots out of the back. Device names are goBILDA's (`left_drive`, `right_drive`, `intake`, `launcher`,
-`windmill`: a goBILDA Speed servo set to spin, it feeds a POLLEN into the flywheel) plus `intake_deploy`
+`feeder`: a goBILDA Speed servo set to spin, it feeds a POLLEN into the flywheel) plus `intake_deploy`
 (the deploy servo). v1 shoots POLLEN only, for now.
 
 **Buttons (R1 TeleOp, one driver on gamepad 1):** left stick drive, right stick X turn; **LT slow** (the
@@ -70,7 +70,7 @@ deploy servo's arm, the flywheel slide, the ramp, the shot angle. Measure the ro
    `deployed`). `travelSec` is the time for a full 0-to-1 move (now from the servo's catalog speed):
    keep it, or time the push and divide by `deployed - stowed`.
 4. The flywheel's numbers with **Tune and check > Flywheel Finder** (`Tunables.Launcher` kP..kF: today goBILDA's),
-   and the windmill's `feedSec` (the library's 0.4 s for now: watch it feed one piece, never two).
+   and the feeder's `feedSec` (the library's 0.4 s for now: watch it feed one piece, never two).
 5. The wheel size with **Tune and check > Drive Tuner**, then `Tunables.Drive.calibrated = true` (until then the
    autonomous refuses to run).
 6. The shot: its real launch angle and speed (see "The autonomous" below), then the start spot.
@@ -183,8 +183,8 @@ to the robot file.
 ./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-no-deploy-servo.sim
 ```
 
-No windmill on the robot? It is `optional()` too: leave `windmill` out of the robot configuration. INIT
-says the feeder is off, the flywheel still spins, and RB feeds nothing. `r1-no-windmill.sim` checks this (`set device windmill missing`).
+No feeder on the robot? It is `optional()` too: leave `feeder` out of the robot configuration. INIT
+says the feeder is off, the flywheel still spins, and RB feeds nothing. `r1-no-feeder.sim` checks this (`set device feeder missing`).
 
 Drive it in a browser (then open http://localhost:8780 and pick "R1 TeleOp"):
 
