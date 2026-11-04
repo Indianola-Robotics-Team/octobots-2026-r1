@@ -40,7 +40,7 @@ public class Tunables {
         public static double travelSec = DEFAULT;                      // a full 0-to-1 move, seconds (servo's speed)
     }
 
-    /** speedRpm, kP and kF are goBILDA's tested numbers for this robot (from their starter code). */
+    /** kP and kF are goBILDA's tested numbers for this robot (from their starter code); speedRpm is ours. */
     public static class Launcher {                                     // "launcher" in the configuration
         public static double speedRpm = 2275;                          // shot speed: 225 in/s at 65° in the simulator (goBILDA had 2679)
         public static double stepRpm = DEFAULT;                        // speed change per D-pad press (100)
