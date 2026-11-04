@@ -1,44 +1,44 @@
-# Robot 1 v1, the autonomous "R1 Launch and Park" (autos/LaunchAndPark.java), as RED (BLUE is the same
-# route from the blue wall: the field is turned, not mirrored). From the start spot it backs 4 in off the
-# wall, fires the four preloaded POLLEN at our HIVE's up CELL (realistic scatter), then drives to our
-# LOADING ZONE and parks partly in it, 2 in or more from every wall: LEAVE 3 + PARK 5.
+# Robot 1, auto 1 "R1 Right Corner: Launch, Park Right" (autos/RightCornerLaunchAndPark.java), as RED
+# (BLUE is the same route from the blue wall: the field is turned, not mirrored). From the start spot it fires the four
+# preloaded POLLEN at our HIVE's up CELL (realistic scatter), then slides to the right corner of our
+# LOADING ZONE (turning to face left on the way), touching nothing: LEAVE 3 + PARK 5.
 # How many shots score depends on the shot angle and speed in the robot file (estimates until measured):
-# with the planned 115 degrees (65 up) at 2275 RPM all four score here, but a real ramp may differ, so
+# with the planned 75 degrees up at 2525 RPM all four score here, but a real ramp may differ, so
 # this file checks that all four are FIRED and prints the verdicts and the score; it does not demand CELL points.
 # Run it: the "Simulator tests" button in Android Studio (all tests), or from the ftc-helper-lib folder:
 #   ./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-auto.sim
 robot ../robot.properties
 set scatter realistic
-init "R1 Launch and Park"
+init "R1 Right Corner: Launch, Park Right"
 press g1.b                                 # RED
 wait 0.5                                   # the robot is placed on the chosen side
-expect screen has "Place robot : Nose corner on wall 20.5in from R, back at HIVE"
+expect screen has "Place robot : Back corner on wall 20.5in from R, front at HIVE"
 expect robot x = 51.6 0.3                    # the start spot (RED: the simulator's field numbers are ours)
-expect robot y = -58.5 0.3                # front-right corner on the red wall (G304)
-expect robot heading = -142.2 1            # the back aimed at the HIVE's up CELL
+expect robot y = -58.5 0.3                # back-left corner on the red wall (G304)
+expect robot heading = 37.8 1              # the front (the ramp) aimed at the HIVE's up CELL
 expect stored = 4                          # four preloaded
-expect shape intake_arm = 95 0.1           # folded (inside the 18 in cube)
+expect shape intake_arm = 85 0.1           # folded (inside the 18 in cube)
 start
-expect within 1 shape intake_arm = 95 0.1  # still folded: it would fall onto the wall here
+expect within 1 shape intake_arm = 85 0.1  # still folded: it would fall onto the wall here
 expect within 12 launched >= 4             # all four fired
 expect stored = 0
-expect within 6 shape intake_arm = -40 0.1    # pushed over once it is off the wall
-expect within 20 screen has "Into the LOADING ZONE"   # the last step is running...
+expect within 6 shape intake_arm = 220 0.1    # pushed over while it drives off the wall
+expect within 20 screen has "To the LOADING ZONE"   # the last step is running...
 expect time < 25                           # ...well inside the 30 s (seconds since START)
 expect within 5 phase STOPPED              # and the autonomous ends by itself
 wait 0.5
-expect screen has "Fire all: done (4 fired)"
-expect screen has "Into the LOADING ZONE: done"
+expect screen has "Fire all at 2525 RPM: done (4 fired)"
+expect screen has "To the LOADING ZONE: done"
 expect screen not "skipped"                # no step skipped or cut short for park time
 expect screen not "cut short"
 expect bumped none                         # touched no wall or field element on the way
-# Parked partly in the red LOADING ZONE (x -46.6..-23.9, y up to -59.1), touching nothing: the ramp's back
-# (9.45 in behind the centre) at least 2 in from the red wall (y -70.585), the sides far from any wall.
-expect robot y > -59.1
-expect robot y < -53
-expect robot x > -42
-expect robot x < -29
-expect robot heading = 0 5
+# Parked at the right corner of the red LOADING ZONE (x -46.6..-23.9, y up to -59.1): beside the zone,
+# only the robot's corner over the zone's corner, which is a PARK; the zone stays free.
+expect robot y > -57
+expect robot y < -50
+expect robot x > -26
+expect robot x < -19
+expect robot heading = 90 5
 expect points "red" >= 18                  # 10 already on the field for red + LEAVE 3 + PARK 5 (+ TELEOP park now)
 print pieces                               # the shots' verdicts and the score
 expect error none

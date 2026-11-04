@@ -6,15 +6,16 @@
 robot ../robot.properties
 set device intake_deploy missing       # not in the configuration (from this INIT)
 init "R1 TeleOp"
+set pose 56 40 -180                    # open floor: the intake (at the back) drops clear of the blue wall
 expect error none                      # no "No Servo named intake_deploy" at INIT
 expect screen has "not in the configuration"   # INIT says the part is off
-expect shape intake_arm = -40 0.1      # down from the start (put down by hand)
+expect shape intake_arm = 220 0.1      # down from the start (put down by hand)
 print size                             # the start cube: see the team page
 start
 expect within 1 motor intake power > 0.9   # the intake starts at START
 set preload off
-set piece POLLEN 56 50                  # a POLLEN 11 in ahead of the robot (TeleOp starts on BLUE: x 56, y 61.1)
-hold g1.left_stick_y -0.4              # drive forward onto it
+set piece POLLEN 56 51                  # a POLLEN 11 in behind the robot (the intake end; robot at x 56, y 40)
+hold g1.left_stick_y 0.4               # back up onto it (the intake is at the back)
 expect within 3 stored >= 1
 release all
 press g1.b                             # B: intake off

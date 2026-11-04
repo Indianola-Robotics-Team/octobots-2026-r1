@@ -1,0 +1,38 @@
+# Robot 1, auto 2 "R1 Right Wall: Launch, Park Right" (autos/RightWallLaunchAndPark.java), as RED (BLUE
+# is the same route from the blue wall: the field is turned, not mirrored). The back on the right wall, the
+# 3rd tile out, facing the HIVE: fire the four preloaded POLLEN at 2325 RPM (the HIVE is close), then
+# slide (no turn) off the wall and on to the right corner of our LOADING ZONE.
+# With the planned 75 degree ramp at 2325 RPM all four score here (the simulator; measure on the robot).
+# Run it from the ftc-helper-lib folder: ./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-auto-right.sim
+robot ../robot.properties
+set scatter realistic
+init "R1 Right Wall: Launch, Park Right"
+press g1.b                                 # RED
+wait 0.5
+expect screen has "Place robot : Back on R wall, 3rd tile, centred, facing HIVE"
+expect robot x = 62 0.3                    # the back on the right wall (x 70.6)
+expect robot y = -11.8 0.3                 # the middle of the 3rd tile out
+expect robot heading = 90 1                # the front (the ramp) facing the HIVE
+expect stored = 4
+expect shape intake_arm = 85 0.1           # folded
+start
+expect within 12 launched >= 4             # all four fired
+expect within 6 shape intake_arm = 220 0.1 # pushed over while it drives off the wall
+expect within 25 phase STOPPED
+wait 0.5
+expect screen has "Fire all at 2325 RPM: done (4 fired)"
+expect screen has "To the LOADING ZONE: done"
+expect screen not "skipped"
+expect screen not "cut short"
+expect bumped none
+# Parked at the right corner of the red LOADING ZONE (x -46.6..-23.9, y up to -59.1): beside the zone,
+# only the robot's corner over the zone's corner, which is a PARK; the zone stays free.
+expect robot y > -57
+expect robot y < -50
+expect robot x > -26
+expect robot x < -19
+expect robot heading = 90 5
+expect points "red" >= 18                  # 10 already on the field for red + LEAVE 3 + PARK 5
+print robot
+print pieces
+expect error none

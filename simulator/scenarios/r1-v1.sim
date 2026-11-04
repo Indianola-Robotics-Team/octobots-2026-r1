@@ -4,21 +4,22 @@
 #   ./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-v1.sim
 robot ../robot.properties
 init "R1 TeleOp"
+set pose 56 40 -180                    # open floor: the intake (at the back) drops clear of the blue wall
 expect size start ok                   # folded: inside the 18 in cube
 expect size most ok                    # every pose: 18 x 24 x 29 in
 expect size floor ok
-expect shape intake_arm = 95 0.1       # folded up
+expect shape intake_arm = 85 0.1       # folded up
 start
 expect motor intake power = 0 0.01         # not before it is deployed
-expect within 3 shape intake_arm = -40 0.1    # pushed over: down on its stop
+expect within 3 shape intake_arm = 220 0.1    # pushed over: down on its stop
 expect within 3 servo intake_deploy actual < 0.05   # the servo went back
-expect shape intake_arm = -40 0.1      # and the intake stays down
+expect shape intake_arm = 220 0.1      # and the intake stays down
 expect size match ok                   # deployed: 18 x 24 x 29 in
-hold g1.left_stick_x 0.6               # strafe right (TeleOp starts on BLUE: x 56, y 61.1, facing the red wall)
+hold g1.left_stick_x 0.6               # strafe right (BLUE, facing the red wall: the launcher end first)
 wait 1
 release all
 expect within 1 robot x < 48           # it moved sideways...
-expect robot y = 61.1 0.5              # ...not forward or back
+expect robot y = 40 0.5                # ...not forward or back
 expect robot heading = -180 3          # ...and did not turn
 hold g1.left_stick_x -0.6              # strafe back for the pick-up below
 wait 1
@@ -26,9 +27,9 @@ release all
 expect within 1 robot x > 52
 set preload off                        # start empty, so the pick-up below is a real one
 expect stored = 0
-set piece POLLEN 56 50                  # a POLLEN 11 in ahead of the robot (TeleOp starts on BLUE: x 56, y 61.1)
+set piece POLLEN 56 51                  # a POLLEN 11 in behind the robot (the intake end; robot at x 56, y 40)
 expect within 1 motor intake power > 0.9   # deployed: the intake runs
-hold g1.left_stick_y -0.4              # drive forward onto it
+hold g1.left_stick_y 0.4               # back up onto it (the intake is at the back)
 expect within 3 stored >= 1
 release all
 press g1.b                             # B: intake off

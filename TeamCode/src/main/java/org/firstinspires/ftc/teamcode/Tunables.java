@@ -42,7 +42,7 @@ public class Tunables {
 
     /** kP and kF are goBILDA's tested numbers for this robot (from their starter code); speedRpm is ours. */
     public static class Launcher {                                     // "launcher" in the configuration
-        public static double speedRpm = 2275;                          // shot speed: 225 in/s at 65° in the simulator (goBILDA had 2679)
+        public static double speedRpm = 2525;                          // TeleOp shot speed (each auto writes its own; goBILDA had 2679)
         public static double stepRpm = DEFAULT;                        // speed change per D-pad press (100)
         public static double readyBandRpm = DEFAULT;                   // "at speed" = this close to the target (60)
         public static double idleRpm = DEFAULT;                        // speed between shots, 0 = stop (0)
@@ -58,16 +58,5 @@ public class Tunables {
     public static class Feeder {                                       // "feeder" in the configuration
         public static double power = DEFAULT;                          // feeder power, 0 to 1 (1.0)
         public static double feedSec = DEFAULT;                        // run time for one piece (0.4)
-    }
-
-    /** The autonomous "R1 Launch and Park" (autos/LaunchAndPark.java). These ARE the route: no defaults. */
-    public static class Auto {                                         // our own section: no part reads it
-        public static double offWallInches = 4;                        // back off the wall before the turn
-        public static double alongWallInches = 85.5;                   // along our wall to the LOADING ZONE
-        public static double intoZoneInches = 12.6;                    // last move into the LOADING ZONE
-        public static double slowPower = 0.4;                          // power for the short moves
-        public static double drivePower = 0.6;                         // power for the long move
-        public static double turnPower = 0.5;                          // power for the turns
-        public static double parkSeconds = 10;                         // seconds kept for parking (it takes ~6 s)
     }
 }

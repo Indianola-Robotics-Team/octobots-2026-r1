@@ -2,7 +2,7 @@
 
 The code for Indianola Robotics' (FTC team 8938) first robot of the BIOBUZZ season. It is the FTC SDK
 (FtcRobotController 12.0) with our helper library, [ftc-helper-lib](https://github.com/crossbotics/ftc-helper-lib),
-in the `ftc-helper-lib` folder (a git submodule). **Library version: v0.27.1** (`git submodule status`
+in the `ftc-helper-lib` folder (a git submodule). **Library version: v0.28.0** (`git submodule status`
 shows it). The team's step-by-step pages (https://crossbotics.com/teams/8938-octobots/) match this version.
 
 ## Get it
@@ -23,7 +23,7 @@ All in `TeamCode/src/main/java/org/firstinspires/ftc/teamcode/`:
 | `Tunables.java` | every number, one section per part |
 | `Controls.java` | the buttons, and the TeleOp ("R1 TeleOp") |
 | `Actions.java` | steps that use several parts (deploy the intake); firing all is the library's `robot.launcher.fireAllAction()` |
-| `autos/` | the autonomous: **R1 Launch and Park** (below) |
+| `autos/` | three autonomous programs: **R1 Right Corner: Launch, Park Right**, **R1 Right Wall: Launch, Park Right**, **R1 Left Wall: Wait, Launch, Park Left** (below) |
 
 How the library works: `ftc-helper-lib/docs/modules/robot.md`; short "how do I...?" answers:
 `ftc-helper-lib/docs/cookbook.md`.
@@ -35,7 +35,7 @@ motor turns, the IMU), the **Servo Finder** (the deploy servo's positions), the 
 launcher's kP..kF), the **Drive Tuner** (the wheel size and the strafe correction, for the autonomous) and the **Shot Tuner** (not
 used by robot 1: it shoots from one spot). They show the lines to copy into `Tunables.java` or
 `Robot.java`. One file of our own stays in `finders/`: **R1 Motor Direction Check** (robot on a block:
-X = front left, Y = front right, A = back left, B = back right; each wheel must roll forward), because it
+X = front left, Y = front right, A = back left, B = back right; each wheel must roll toward the launcher), because it
 uses our drive's directions from `Robot.java`.
 The full first-time order, with what "pass" means at each step: the team pages' Part C,
 "The first robot sessions" (https://crossbotics.com/teams/8938-octobots/robot/).
@@ -47,11 +47,17 @@ A goBILDA **Strafer** chassis (3209-0001-0007): four 312 RPM motors and 104 mm G
 wheels (wheels with small rollers at 45 degrees), so the robot can also **strafe** (drive sideways without
 turning). On it: an intake that folds up at the start and is pushed over by a servo at START (then gravity
 holds it on a hard stop), Offset surgical tubing rollers (90 mm and 60 mm taking turns), two goBILDA 72 mm
-Boot-Wheel spinners at the front corners driven from the intake through miter gears, a flywheel on a
+Boot-Wheel spinners at the intake's corners driven from the intake through miter gears, a flywheel on a
 sliding mount, a **feeder** (Gecko wheels on a goBILDA Speed servo set to spin: it pushes one POLLEN into
-the flywheel), and a ramp that sends shots out of the back. Robot 1 handles **POLLEN only**.
-Device names: `front_left`, `front_right`, `back_left`, `back_right`, `imu`, `intake`, `intake_deploy`
-(the deploy servo), `launcher`, `feeder`.
+the flywheel), and a ramp that sends shots out. Robot 1 handles **POLLEN only**.
+
+**The FRONT is the launcher end** (since 2026-11-04): shots go up the ramp out of the front, and the
+intake is at the back. Driving forward = launcher first. Device names: `front_left`, `front_right`,
+`back_left`, `back_right` (the drive motors, with the launcher as the front), `imu`, `intake`,
+`intake_deploy` (the deploy servo), `launcher`, `feeder`. **A Control Hub set up with the old names**
+(when the intake was the front): keep every wire in its port and swap the four drive names: old
+`front_left` -> `back_right`, old `front_right` -> `back_left`, old `back_left` -> `front_right`, old
+`back_right` -> `front_left`. Then run R1 Motor Direction Check.
 
 **Buttons (R1 TeleOp, one driver on gamepad 1):** left stick drive and strafe, right stick X turn; **LT
 slow** (the further you pull it, the slower, like last season); left stick click slow on/off; right stick
@@ -68,7 +74,7 @@ the simulator), so the driver taps **B** (intake off) when the robot is full.
 deploy servo's arm, the flywheel slide, the ramp, the shot angle. Measure the robot and replace them.
 **Still to find on the robot**, in this order:
 1. **Tune and check > Hardware Check**: every device found, each motor and servo turns. Then
-   **R1 Motor Direction Check** (robot on a block): all four drive wheels roll forward.
+   **R1 Motor Direction Check** (robot on a block): all four drive wheels roll toward the launcher.
 2. How the Control Hub is mounted (`imu(...)` in Robot.java: the way its logo and USB port face).
 3. The deploy servo's positions with **Tune and check > Servo Finder** (`Tunables.IntakeDeploy`: `stowed`,
    `deployed`). `travelSec` is the time for a full 0-to-1 move (now from the servo's catalog speed):
@@ -77,58 +83,67 @@ deploy servo's arm, the flywheel slide, the ramp, the shot angle. Measure the ro
    and the feeder's `feedSec` (the library's 0.4 s for now: watch it feed one piece, never two).
 5. The wheel size and the strafe correction with **Tune and check > Drive Tuner**, then `Tunables.Drive.calibrated = true` (until then the
    autonomous refuses to run).
-6. The shot: its real launch angle and speed (see "The autonomous" below), then the start spot.
+6. The shot: its real launch angle and speed (see "The autonomous programs" below), then each start spot.
 7. Every number marked "est." or GUESS in Robot.java (measure the robot), then remake the simulator's
    robot file (below).
 
-## The autonomous: R1 Launch and Park
+## The autonomous programs
 
-`autos/LaunchAndPark.java`. It fires the four preloaded POLLEN into our HIVE's up CELL, then parks
-partly in our LOADING ZONE without touching a wall (LEAVE 3 + PARK 5). Same route for RED and BLUE,
-each from its own wall (the field is turned, not mirrored).
+Three programs, all in `autos/`. Each fires the four preloaded POLLEN into our HIVE, then parks at a
+corner of our LOADING ZONE without touching a wall (LEAVE 3 + PARK 5). Same routes for RED and BLUE, each
+from its own wall (the field is turned, not mirrored). Right and left: as our drivers see them from our wall.
+Every program fires first, from its start spot, then pushes the intake over WHILE it drives away from the
+wall (at START it would fall onto the wall: `Robot.deployAtStart = false`). The mecanum wheels slide the
+robot to the zone. PARK counts with any part of the robot over the zone's tape, so each one ends BESIDE
+the zone, only its corner over the zone's corner: the zone stays free for our partner.
 
-**Place the robot** (Driver Station: "Nose corner on wall 20.5in from R, back at HIVE"): on our side,
-right of centre, the robot's **front-right corner touching our wall, 20.5 in from the right-hand wall**,
-the body turned 52 degrees to the wall so the **back (the ramp) points at our HIVE's up CELL**. Intake
-folded. Legal by G304: touching the wall, in our half, not in the LOADING ZONE, clear of the FLOWER.
+**Written like the auto builder writes them:** plain numbers in the steps, so the simulator's auto builder
+(and crossbotics.com's path builder) can open each file ("Start from one of your autos"), show it on the
+map, and change it. A move is `move(name, inches, direction, power)`: the direction in degrees clockwise
+from the robot's front. `moveWithTurn(name, inches, direction, heading, power)` turns while it drives (no
+time lost); its direction and heading count from the START heading.
 
-**Why there:** the up CELL's opening faces the audience side, so a shot must come down into it from that
-side. The simulator's hit rate (400 shots, realistic scatter) from spots along our wall found a
-band right of centre; this spot is the best one that keeps 4.5 in from the GARDEN's POLLEN:
+| Program | Place the robot | Shoots | Parks |
+| --- | --- | --- | --- |
+| **R1 Right Corner: Launch, Park Right** (`RightCornerLaunchAndPark.java`) | right of centre on our wall: the **back-left corner touching our wall, 20.5 in from the right-hand wall**, turned 52 degrees so the **front (the ramp) points at our HIVE's up CELL** | at once, at 2525 RPM (`speedRpm`'s number) | the zone's right corner, facing left (it turns while it drives) |
+| **R1 Right Wall: Launch, Park Right** (`RightWallLaunchAndPark.java`) | **back on the right wall, the 3rd tile out from our wall, centred in it**, front facing the HIVE | at once, at 2325 RPM: the HIVE is closer | the zone's right corner, facing left |
+| **R1 Left Wall: Wait, Launch, Park Left** (`LeftWallWaitLaunchAndPark.java`) | **back on the left wall, the 3rd tile out**, front facing the HIVE, **0.6 in off centre toward the field's centre line** (centred, it would overlap the FLOWER on that wall by 0.4 in) | after **15 s**, at 2325 RPM | the zone's left corner, facing right |
 
-| Shot (from the spot, after backing 4 in) | 210 in/s | 220 in/s | 230 in/s | 240 in/s |
-| --- | --- | --- | --- | --- |
-| 70 degrees up | 1 % | 71 % | 98 % | 30 % |
-| 65 degrees up | 8 % | 96 % | 90 % | 5 % |
-| 60 or 55 degrees up | 0 | 0 | 0 | 0 |
+**Why the left one waits:** from the left, the HIVE's CELL on our side is the DOWN one at the start. Our
+partner's shots from the right tip the HIVE; then the CELL on the left is up and open to us. Run it only
+with a partner that scores first. Two of our programs can share the zone: one parks right, one left.
 
-**Important:** the built ramp is 53 degrees up from the floor (measured 2026-10-27), and from this spot
-that misses. The robot file now uses **65 degrees** (the plan for the ramp; mentor, 2026-10-27), so the
-shot is 115 degrees. At 65 degrees the speed matters: the simulator's exit speed is half the wheel's rim
-speed, so goBILDA's 2679 RPM is about 265 in/s and misses. `Tunables.Launcher.speedRpm` is now **2275 RPM**
-(225 in/s), which scores 4 of 4. Find the real speed on the robot once the ramp is 65 degrees.
+**Why the ramp is 75 degrees** (the plan; the built ramp is 53, measured 2026-10-27): from tile 3 on a
+side wall, the up CELL is only about 40 in away. A 65 degree shot that reaches the opening's height there
+is still going up, at any speed (the simulator: 0 of 4 from 1500 to 2275 RPM). At 75 degrees it comes down
+into it. The simulator (realistic scatter, the exit speed half the wheel's rim speed), from the start
+spots: auto 1 4 of 4 at 2500 to 2550 RPM, autos 2 and 3 4 of 4 at 2300 to 2350 RPM. Each auto fires with
+`robot.launcher.fireAllAction(rpm)`: that shot's own speed, then back to `speedRpm` (the TeleOp's).
 
-**Route** (turns, forward and back only: no strafing needed; numbers in `Tunables.Auto`): back 4 in off the wall,
-fire all four (the intake stays folded until now: at START it would fall onto the wall, so the auto
-sets `Robot.deployAtStart = false`); turn 45 degrees left, push the intake over, back 85.5 in along
-our wall past our FLOWER; turn to face the far wall and back 12.6 in into the LOADING ZONE. It ends
-about 2.5-3 in from our wall, partly in the zone, after about 17 s. `parkWithSeconds(10)` keeps
-time for the park steps if firing is slow.
+**Routes** (after firing; the intake is pushed over during the first move):
+- **Right Corner:** slide 9.4 in straight away from our wall (clear of our FLOWER), then 74.5 in to the
+  zone's right corner, turning to face left on the way.
+- **Right Wall:** slide 35.8 in off the wall toward ours, then 64.1 in past the HIVE's frame to the zone's
+  right corner.
+- **Left Wall:** wait 15 s first; after firing, 8 in forward (clear of the FLOWER), then 42.3 in to the
+  zone's left corner. About 24 s in all: `parkWithSeconds(10)` keeps time for the park if firing is slow.
 
-**Check it** (from the `ftc-helper-lib` folder): `./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-auto.sim`.
-It checks the start spot, four fired, the intake pushed over off the wall, no bumps, the end pose
-(at least 2 in from the wall, in the zone), under 25 s, and prints the shot verdicts and points. With
-the robot file's 65 degree shot at 2275 RPM: 4 of 4 clean, the HIVE tips (+20), red 37. (At 2679 RPM: 0 of 4,
-too fast. At 53 degrees: 0 of 4.)
+**Check them** (from the `ftc-helper-lib` folder): `r1-auto.sim` (Right Corner), `r1-auto-right.sim`,
+`r1-auto-left.sim` (`./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-auto.sim`, and so on). Each
+checks the start spot, four fired, the intake pushed over while it drives off the wall, no bumps, and the
+end pose (beside the zone at its corner, the heading), and prints the shot verdicts and points: 4 of 4 clean
+in all three. The left one first drops four POLLEN into the up CELL, to tip the HIVE like our partner would.
 
-**Measure on the robot before trusting it:**
+**Measure on the robot before trusting them:**
 1. The shot: film a shot from the side next to a tape measure. Launch angle (degrees up from the
-   floor) and exit speed (inches per second). Put the angle in Robot.java (`shotAngle(180 - up)`),
-   remake the robot file, and run the hit rate from the start spot (simulator page: Hit rate).
-2. Then the speed: tune `Tunables.Launcher.speedRpm` from the start spot until all four go in.
+   floor) and exit speed (inches per second). Put the angle in Robot.java (`shotAngle(up)`),
+   remake the robot file, and run the hit rate from each start spot (simulator page: Hit rate).
+2. Then the speeds: from each start spot, change the RPM in that auto's `fireAllAction(...)` until all four
+   go in (and `Tunables.Launcher.speedRpm` for the TeleOp).
 3. That the four preloads fire with the intake still folded up.
-4. The drive: the Drive Tuner (Tune and check) first (the inches are only right on a tuned robot), then check the end
-   spot: at least 2 in from the wall, partly in the LOADING ZONE. Change `Tunables.Auto` if not.
+4. The drive: the Drive Tuner (Tune and check) first (the inches are only right on a tuned robot), then
+   check each end spot: at least 2 in from the wall, its corner over the LOADING ZONE. If not, open the auto
+   in the auto builder, drag its end point, and paste the Java back.
 5. Our partner robot must not start or park in the same places.
 
 ## Update the library
@@ -143,7 +158,7 @@ to date".
 
 ```bash
 git -C ftc-helper-lib fetch --tags
-git -C ftc-helper-lib checkout v0.27.1        # the new version's tag (an example)
+git -C ftc-helper-lib checkout v0.28.0        # the new version's tag (an example)
 ./gradlew :TeamCode:assembleDebug             # build; fix what the CHANGELOG says
 ```
 
@@ -169,10 +184,12 @@ Check it (size rules, the intake drops at START, picks up a POLLEN, fires it):
 ./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-v1.sim
 ```
 
-and the autonomous (from its start spot it fires all four, then parks in the LOADING ZONE):
+and the three autonomous programs (each fires all four, then parks in the LOADING ZONE):
 
 ```bash
 ./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-auto.sim
+./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-auto-right.sim
+./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-auto-left.sim
 ```
 
 No fold-out servo on the robot yet? Nothing to change: `intake_deploy` is `optional()` in `Robot.java`.
