@@ -3,9 +3,10 @@
 # Run it: the "Simulator tests" button in Android Studio (all tests), or from the ftc-helper-lib folder:
 #   ./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-no-feeder.sim
 robot ../robot.properties
-set device feeder missing            # not in the configuration (from this INIT)
+set device feeder_arm missing        # not in the configuration (from this INIT)
+set device feeder_wheel missing
 init "R1 TeleOp"
-expect error none                      # no "No CRServo named feeder" at INIT
+expect error none                      # no "No Servo named feeder_arm" at INIT
 expect screen has "not in the configuration"   # INIT says the feeder is off
 start
 expect within 4 motor launcher velocity > 1000   # the flywheel spins from START

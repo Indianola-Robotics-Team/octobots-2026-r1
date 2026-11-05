@@ -2,7 +2,7 @@
 
 The code for Indianola Robotics' (FTC team 8938) first robot of the BIOBUZZ season. It is the FTC SDK
 (FtcRobotController 12.0) with our helper library, [ftc-helper-lib](https://github.com/crossbotics/ftc-helper-lib),
-in the `ftc-helper-lib` folder (a git submodule). **Library version: v0.28.0** (`git submodule status`
+in the `ftc-helper-lib` folder (a git submodule). **Library version: v0.29.0** (`git submodule status`
 shows it). The team's step-by-step pages (https://crossbotics.com/teams/8938-octobots/) match this version.
 
 ## Get it
@@ -48,13 +48,15 @@ wheels (wheels with small rollers at 45 degrees), so the robot can also **strafe
 turning). On it: an intake that folds up at the start and is pushed over by a servo at START (then gravity
 holds it on a hard stop), Offset surgical tubing rollers (90 mm and 60 mm taking turns), two goBILDA 72 mm
 Boot-Wheel spinners at the intake's corners driven from the intake through miter gears, a flywheel on a
-sliding mount, a **feeder** (Gecko wheels on a goBILDA Speed servo set to spin: it pushes one POLLEN into
-the flywheel), and a ramp that sends shots out. Robot 1 handles **POLLEN only**.
+sliding mount, two feed parts (a **feeder wheel**: Gecko wheels on a goBILDA Speed servo set to spin, it
+moves the POLLEN up to the ramp; and a **feeder arm** on a goBILDA torque servo, it pushes each POLLEN up into
+the flywheel, then comes back down), and a ramp that sends shots out. Robot 1 handles **POLLEN only**.
 
 **The FRONT is the launcher end** (since 2026-11-04): shots go up the ramp out of the front, and the
 intake is at the back. Driving forward = launcher first. Device names: `front_left`, `front_right`,
 `back_left`, `back_right` (the drive motors, with the launcher as the front), `imu`, `intake`,
-`intake_deploy` (the deploy servo), `launcher`, `feeder`. **A Control Hub set up with the old names**
+`intake_deploy` (the deploy servo), `launcher`, `feeder_wheel` (the CR servo; it was `feeder`), `feeder_arm`
+(the torque servo, a SERVO in the configuration, not a CR servo). **A Control Hub set up with the old names**
 (when the intake was the front): keep every wire in its port and swap the four drive names: old
 `front_left` -> `back_right`, old `front_right` -> `back_left`, old `back_left` -> `front_right`, old
 `back_right` -> `front_left`. Then run R1 Motor Direction Check.
@@ -80,7 +82,11 @@ deploy servo's arm, the flywheel slide, the ramp, the shot angle. Measure the ro
    `deployed`). `travelSec` is the time for a full 0-to-1 move (now from the servo's catalog speed):
    keep it, or time the push and divide by `deployed - stowed`.
 4. The flywheel's numbers with **Tune and check > Flywheel Finder** (`Tunables.Launcher` kP..kF: today goBILDA's),
-   and the feeder's `feedSec` (the library's 0.4 s for now: watch it feed one piece, never two).
+   Then the feeder arm's `rest` and `push` with **Tune and check > Servo Finder** (`Tunables.FeederArm`: INIT
+   stops until they are written). Then watch a shot and tune the feeder wheel (`Tunables.FeederWheel`):
+   `alwaysOn = false` runs it only while firing: it turns `stageSec` (0.2 s) to bring the POLLEN to the arm, the
+   arm pushes, and the wheel stops `stopSec` (0.3 s) after the push starts (below 0 = before the push, 0 = as it
+   starts). `alwaysOn = true` runs it all the time the flywheel is on, and the arm pushes at once.
 5. The wheel size and the strafe correction with **Tune and check > Drive Tuner**, then `Tunables.Drive.calibrated = true` (until then the
    autonomous refuses to run).
 6. The shot: its real launch angle and speed (see "The autonomous programs" below), then each start spot.
@@ -126,7 +132,8 @@ spots: auto 1 4 of 4 at 2500 to 2550 RPM, autos 2 and 3 4 of 4 at 2300 to 2350 R
 - **Right Wall:** slide 35.8 in off the wall toward ours, then 64.1 in past the HIVE's frame to the zone's
   right corner.
 - **Left Wall:** wait 15 s first; after firing, 8 in forward (clear of the FLOWER), then 42.3 in to the
-  zone's left corner. About 24 s in all: `parkWithSeconds(10)` keeps time for the park if firing is slow.
+  zone's left corner. `parkWithSeconds(8)` keeps time for the park if firing is slow (the feeder wheel and
+  arm take longer a shot than the old feeder: with 10 s, the 4th shot was cut short after the 15 s wait).
 
 **Check them** (from the `ftc-helper-lib` folder): `r1-auto.sim` (Right Corner), `r1-auto-right.sim`,
 `r1-auto-left.sim` (`./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-auto.sim`, and so on). Each
@@ -158,7 +165,7 @@ to date".
 
 ```bash
 git -C ftc-helper-lib fetch --tags
-git -C ftc-helper-lib checkout v0.28.0        # the new version's tag (an example)
+git -C ftc-helper-lib checkout v0.29.0        # the new version's tag (an example)
 ./gradlew :TeamCode:assembleDebug             # build; fix what the CHANGELOG says
 ```
 
@@ -204,8 +211,9 @@ to the robot file.
 ./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-no-deploy-servo.sim
 ```
 
-No feeder on the robot? It is `optional()` too: leave `feeder` out of the robot configuration. INIT
-says the feeder is off, the flywheel still spins, and RB feeds nothing. `r1-no-feeder.sim` checks this (`set device feeder missing`).
+No feeder on the robot? Both feed parts are `optional()` too: leave `feeder_arm` and `feeder_wheel` out of the
+robot configuration. INIT says they are off, the flywheel still spins, and RB feeds nothing. `r1-no-feeder.sim`
+checks this (`set device feeder_arm missing`, `set device feeder_wheel missing`).
 
 Drive it in a browser (then open http://localhost:8780 and pick "R1 TeleOp"):
 

@@ -1,0 +1,31 @@
+# Robot 1's two feed parts: the feeder wheel (CR servo) brings each POLLEN to the feeder arm (torque servo),
+# then the arm pushes it into the flywheel. In the simulator a push sends a POLLEN only if the wheel ran
+# since the last push (a POLLEN got to the arm). "launched" counts for the whole file.
+# Run it: the "Simulator tests" button in Android Studio (all tests), or from the ftc-helper-lib folder:
+#   ./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-feed-wheel.sim
+robot ../robot.properties
+
+# 1. The wheel stops before it starts (stopSec = -stageSec): no POLLEN gets to the arm, the push sends nothing.
+set tunable FeederWheel.stageSec 0.3
+set tunable FeederWheel.stopSec -0.3
+init "R1 TeleOp"
+start
+expect within 4 motor launcher velocity > 1000   # spins from START
+press g1.right_bumper                  # RB: fire one
+wait 1.5
+expect launched = 0
+stop
+
+# 2. Only while firing, the library's timing (stageSec 0.2, stopSec 0.3): one RB, one POLLEN.
+set tunable FeederWheel.stageSec 0.2
+set tunable FeederWheel.stopSec 0.3
+init "R1 TeleOp"
+start
+expect within 4 motor launcher velocity > 1000
+expect servo feeder_arm target = 0 0.01          # the arm waits down
+press g1.right_bumper
+expect within 2 launched = 1
+expect within 2 servo feeder_arm target = 0 0.01  # the arm came back down
+stop
+
+expect error none

@@ -12,7 +12,7 @@ import com.crossbotics.ftchelper.robot.Pad;
  * - the intake runs once it is deployed (just after START). B: intake on / off. Double-tap B: push pieces out, until B is
  *   tapped again (then it runs in).
  * - the flywheel spins from START and stays at speed, ready. LB: coast it (when parked) / spin up again
- * - RB fires one POLLEN: the feeder CR servo feeds it into the wheel (it waits until the wheel is at
+ * - RB fires one POLLEN: the feeder wheel brings it to the feeder arm, and the arm pushes it into the wheel (it waits until the wheel is at
  *   speed; hold RB to keep firing until you let go)
  * - D-pad up/down: flywheel speed +/- 100 RPM
  * - X: push the intake over again (if it did not fall at START)

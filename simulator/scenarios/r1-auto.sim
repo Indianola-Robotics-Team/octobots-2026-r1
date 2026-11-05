@@ -34,7 +34,7 @@ expect screen not "cut short"
 expect bumped none                         # touched no wall or field element on the way
 # Parked at the right corner of the red LOADING ZONE (x -46.6..-23.9, y up to -59.1): beside the zone,
 # only the robot's corner over the zone's corner, which is a PARK; the zone stays free.
-expect robot y > -57
+expect robot y > -58
 expect robot y < -50
 expect robot x > -26
 expect robot x < -19

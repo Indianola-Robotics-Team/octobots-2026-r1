@@ -64,14 +64,18 @@ public class Robot extends RobotDefinition {
                 .looks(intakeArm, roller, leftSpinner, rightSpinner));
 
         // The launcher: one 96 mm wheel. Shots leave up the front ramp. Robot 1 shoots POLLEN only.
-        // The "feeder" CR servo (a goBILDA Speed servo set to spin) turns Gecko wheels that push the POLLEN into the wheel; optional(): the robot runs without it.
+        // Two feed parts: the "feeder_wheel" CR servo (a goBILDA Speed servo set to spin) turns Gecko wheels that move the
+        // POLLEN up to the "feeder_arm" (a goBILDA torque servo), which pushes each one up into the flywheel and comes back.
+        // The wheel runs only while firing (first, then the arm pushes) or all the time: Tunables.FeederWheel alwaysOn.
         // Two shapes: its sliding mount and the wheel riding on it.
-        // "launcher", "feeder" = names in the robot configuration. Numbers: Tunables.Launcher, .Feeder.
+        // "launcher", "feeder_arm", "feeder_wheel" = names in the robot configuration. Numbers: Tunables.Launcher, .FeederArm, .FeederWheel.
+        // optional(): the robot runs without them.
         Shape launcherSlide = Shape.slide().name("launcher_slide").atMm(40, 5, 120).sizeMm(30, 30, 48)
                 .passive().travelMm(20).note("est.");
         Shape flywheel = Shape.flywheel("gobilda-hogback-96").on("launcher_slide").atMm(0, 0, 48);
         launcher = add(Launcher.flywheel("launcher", "gobilda-5203-6000")
-                .feeder(Indexer.crServo("feeder").part("gobilda-2000-speed").reversed().optional())
+                .feeder(Indexer.servo("feeder_arm").part("gobilda-2000-torque").optional())
+                .feedWheel(Indexer.crServo("feeder_wheel").part("gobilda-2000-speed").reversed().optional())
                 .spinAtStart()   // at speed from START and between shots, ready to fire (LB lets it coast to park)
                 .looks(launcherSlide, flywheel)
                 .shotAngle(75));   // 75° up from the floor, out of the front (the planned ramp; the built one is 53°)

@@ -33,7 +33,7 @@ public class LeftWallWaitLaunchAndPark extends Auto<Robot> {
         s.start("Back on L wall, 3rd tile, 0.6in off centre, facing HIVE", -62, -11.2, -90)
          .waitSeconds("Wait for our partner", 15)
          .action(robot.launcher.fireAllAction(2325), 8)
-         .parkWithSeconds(10)
+         .parkWithSeconds(8)
          .alongside(Actions.deployIntake(robot))
          .move("Off the wall", 8, 0, 0.6)
          .move("To the LOADING ZONE", 42.3, 81, 0.6);
