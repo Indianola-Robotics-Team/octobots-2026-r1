@@ -29,7 +29,7 @@ public class Robot extends RobotDefinition {
     @Override
     protected void define() {
         // The drive: the Strafer's four 312 RPM motors and 104 mm GripForce mecanum wheels. Order: FL, FR, BL, BR.
-        // The library reverses the left side (front_left, back_left): R1 Motor Direction Check checks it.
+        // The library reverses the left side (front_left, back_left): Tune and check > Motor Direction Check checks it.
         // "front_left" ... "imu" = names in the robot configuration (Driver Station), exactly.
         drive(Drive.mecanum("front_left", "front_right", "back_left", "back_right")
                 .motor("gobilda-5203-312").wheel("gobilda-gripforce-mecanum-104")

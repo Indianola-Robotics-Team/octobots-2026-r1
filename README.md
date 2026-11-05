@@ -2,7 +2,7 @@
 
 The code for Indianola Robotics' (FTC team 8938) first robot of the BIOBUZZ season. It is the FTC SDK
 (FtcRobotController 12.0) with our helper library, [ftc-helper-lib](https://github.com/crossbotics/ftc-helper-lib),
-in the `ftc-helper-lib` folder (a git submodule). **Library version: v0.29.0** (`git submodule status`
+in the `ftc-helper-lib` folder (a git submodule). **Library version: v0.30.0** (`git submodule status`
 shows it). The team's step-by-step pages (https://crossbotics.com/teams/8938-octobots/) match this version.
 
 ## Get it
@@ -31,12 +31,12 @@ How the library works: `ftc-helper-lib/docs/modules/robot.md`; short "how do I..
 **Tune and check** (the library's own OpMode, TeleOp list, "Finders" group; no file in our code) has
 every check and finder for this robot in one menu: D-pad up/down to pick, **A** to open, **START** to run;
 STOP, then INIT, for the next one. For robot 1 it lists the **Hardware Check** (every device found, each
-motor turns, the IMU), the **Servo Finder** (the deploy servo's positions), the **Flywheel Finder** (the
+motor turns, the IMU), the **Motor Direction Check** (robot on a block: X = front left, Y = front right,
+A = back left, B = back right; each wheel must roll toward the launcher, with our drive's directions from
+`Robot.java`), the **Servo Finder** (the deploy servo's positions), the **Flywheel Finder** (the
 launcher's kP..kF), the **Drive Tuner** (the wheel size and the strafe correction, for the autonomous) and the **Shot Tuner** (not
 used by robot 1: it shoots from one spot). They show the lines to copy into `Tunables.java` or
-`Robot.java`. One file of our own stays in `finders/`: **R1 Motor Direction Check** (robot on a block:
-X = front left, Y = front right, A = back left, B = back right; each wheel must roll toward the launcher), because it
-uses our drive's directions from `Robot.java`.
+`Robot.java`. No finder files of our own: the library has them all.
 The full first-time order, with what "pass" means at each step: the team pages' Part C,
 "The first robot sessions" (https://crossbotics.com/teams/8938-octobots/robot/).
 How: `ftc-helper-lib/docs/guides/finders.md`.
@@ -59,7 +59,7 @@ intake is at the back. Driving forward = launcher first. Device names: `front_le
 (the torque servo, a SERVO in the configuration, not a CR servo). **A Control Hub set up with the old names**
 (when the intake was the front): keep every wire in its port and swap the four drive names: old
 `front_left` -> `back_right`, old `front_right` -> `back_left`, old `back_left` -> `front_right`, old
-`back_right` -> `front_left`. Then run R1 Motor Direction Check.
+`back_right` -> `front_left`. Then run **Tune and check > Motor Direction Check**.
 
 **Buttons (R1 TeleOp, one driver on gamepad 1):** left stick drive and strafe, right stick X turn; **LT
 slow** (the further you pull it, the slower, like last season); left stick click slow on/off; right stick
@@ -76,8 +76,15 @@ the simulator), so the driver taps **B** (intake off) when the robot is full.
 deploy servo's arm, the flywheel slide, the ramp, the shot angle. Measure the robot and replace them.
 **Still to find on the robot**, in this order:
 1. **Tune and check > Hardware Check**: every device found, each motor and servo turns. Then
-   **R1 Motor Direction Check** (robot on a block): all four drive wheels roll toward the launcher.
+   **Tune and check > Motor Direction Check** (robot on a block): all four drive wheels roll toward the launcher.
 2. How the Control Hub is mounted (`imu(...)` in Robot.java: the way its logo and USB port face).
+   **Every servo, the first time (and after a new horn):** robot on a block, the servo's arm (horn) OFF or
+   loose. In **Tune and check > Servo Finder**, choose the servo and press A: it goes to the middle (0.5) and
+   holds. Put the arm on in the middle of the part's swing, tighten, and mark horn and shaft with a paint pen.
+   Then press D-pad right a few times and write down which way "bigger" moves the part (no servo standard:
+   goBILDA says clockwise, but the mounting decides). Find each end in small steps until the part JUST
+   touches; a humming servo is pushing: back off at once. Then save each position with A. Full steps:
+   [A new servo part, step by step](https://crossbotics.com/ftc-helper/docs/guides/finders/#a-new-servo-part-step-by-step).
 3. The deploy servo's positions with **Tune and check > Servo Finder** (`Tunables.IntakeDeploy`: `stowed`,
    `deployed`). `travelSec` is the time for a full 0-to-1 move (now from the servo's catalog speed):
    keep it, or time the push and divide by `deployed - stowed`.
@@ -165,7 +172,7 @@ to date".
 
 ```bash
 git -C ftc-helper-lib fetch --tags
-git -C ftc-helper-lib checkout v0.29.0        # the new version's tag (an example)
+git -C ftc-helper-lib checkout v0.30.0        # the new version's tag (an example)
 ./gradlew :TeamCode:assembleDebug             # build; fix what the CHANGELOG says
 ```
 
@@ -214,6 +221,10 @@ to the robot file.
 No feeder on the robot? Both feed parts are `optional()` too: leave `feeder_arm` and `feeder_wheel` out of the
 robot configuration. INIT says they are off, the flywheel still spins, and RB feeds nothing. `r1-no-feeder.sim`
 checks this (`set device feeder_arm missing`, `set device feeder_wheel missing`).
+
+The feed wheel's timing: `r1-feed-wheel.sim` (only while firing: a wheel that stops before it starts sends
+nothing; the default timing sends one POLLEN and the arm comes back) and `r1-feed-wheel-always.sim`
+(`alwaysOn = true`: two RB presses, two POLLEN).
 
 Drive it in a browser (then open http://localhost:8780 and pick "R1 TeleOp"):
 
