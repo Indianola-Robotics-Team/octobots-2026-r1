@@ -25,6 +25,7 @@ public class Tunables {
         public static double turnKp = DEFAULT;                         // auto turns: push per degree off (0.012)
         public static double turnKd = DEFAULT;                         // auto turns: brake near the end (0.003)
         public static double moveMinPower = DEFAULT;                   // auto: least power that moves it (0.30)
+        public static double slowDownIn = DEFAULT;                     // auto: slow down over at least the last N in of each move (0 = off; try 6)
         public static boolean calibrated = false;                      // set true after the Drive Tuner (auto needs it)
     }
 
