@@ -48,6 +48,7 @@ public class Tunables {
         public static double readyBandRpm = DEFAULT;                   // "at speed" = this close to the target (60)
         public static double idleRpm = DEFAULT;                        // speed between shots, 0 = stop (0)
         public static double shotIntervalSec = DEFAULT;                // least time between two shots (0.25)
+        public static double maxFiringQueue = DEFAULT;                 // fire presses that may wait (4; 0 = no queue: a press during a shot is ignored)
         public static double kP = 40;                                  // speed control: push per speed error (goBILDA)
         public static double kI = 0;                                   // speed control: not used (goBILDA)
         public static double kD = 0;                                   // speed control: not used (goBILDA)

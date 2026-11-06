@@ -63,13 +63,15 @@ intake is at the back. Driving forward = launcher first. Device names: `front_le
 
 **Buttons (R1 TeleOp, one driver on gamepad 1):** left stick drive and strafe, right stick X turn; **LT
 slow** (the further you pull it, the slower, like last season); left stick click slow on/off; right stick
-click field-centric on/off (forward = away from the driver, however the robot faces). **B** intake on/off,
-double-tap B pushes out until the next tap (the intake starts by itself once it is deployed). The flywheel spins
-up at START and stays at speed. **LB** lets it coast (when parked; again: spin up), **RB** fires one POLLEN (hold to keep firing), D-pad up/down flywheel
-speed. **X** deploys the intake again. **BACK** pauses everything (again: go on). **GUIDE** shows this
-map (hold GUIDE 1 s after START, PRACTICE profile: the tuning menu). Free: A, Y, RT, D-pad left/right.
+double-click field-centric on/off (forward = away from the driver, however the robot faces). **LB** intake on/off,
+double-tap LB pushes out until the next tap (the feed wheel turns backward too; the intake starts by itself
+once it is deployed). The flywheel spins up at START and stays at speed. **B** switches it off and on; off,
+**RB** still fires (it spins up, fires, and switches off again). **RB** fires one POLLEN (hold to keep
+firing), D-pad up/down flywheel speed (50 RPM a press). **X** deploys the intake again. **BACK** pauses
+everything (again: go on). **GUIDE** shows this map (hold GUIDE 1 s after START, PRACTICE profile: the
+tuning menu). Free: A, Y, RT, D-pad left/right. Both gamepads buzz at 1:00, 1:40 and 1:59.
 **Four pieces at most** (rule G407): nothing in the code stops the intake at 4 (`holds(4)` only tells
-the simulator), so the driver taps **B** (intake off) when the robot is full.
+the simulator), so the driver taps **LB** (intake off) when the robot is full.
 
 **Still estimates (marked "est." in Robot.java):** the Strafer's sizes (chassis box, track, wheelbase), the intake's hinge and arm, the spinners' place (goBILDA
 72 mm Boot-Wheels, flush with the roller and low, from photos; the roller's tubing is soft in the simulator), the
