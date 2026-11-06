@@ -73,9 +73,9 @@ public class Robot extends RobotDefinition {
         Shape launcherSlide = Shape.slide().name("launcher_slide").atMm(40, 5, 120).sizeMm(30, 30, 48)
                 .passive().travelMm(20).note("est.");
         Shape flywheel = Shape.flywheel("gobilda-hogback-96").on("launcher_slide").atMm(0, 0, 48);
-        launcher = add(Launcher.flywheel("launcher", "gobilda-5203-6000")
+        launcher = add(Launcher.flywheel("launcher", "gobilda-5203-6000").reversed()
                 .feeder(Indexer.servo("feeder_arm").part("gobilda-2000-torque").optional())
-                .feedWheel(Indexer.crServo("feeder_wheel").part("gobilda-2000-speed").reversed().optional())
+                .feedWheel(Indexer.crServo("feeder_wheel").part("gobilda-2000-speed").optional())
                 .spinAtStart()   // at speed from START and between shots, ready to fire (LB lets it coast to park)
                 .looks(launcherSlide, flywheel)
                 .shotAngle(75));   // 75° up from the floor, out of the front (the planned ramp; the built one is 53°)

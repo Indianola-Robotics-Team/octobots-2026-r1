@@ -35,8 +35,8 @@ public class Tunables {
 
     /** MEASURE: INIT stops until the Servo Finder gives these two numbers (a guess could break the servo). */
     public static class IntakeDeploy {                                 // "intake_deploy" in the configuration
-        public static double stowed = MEASURE;                         // intake folded (Servo Finder)
-        public static double deployed = MEASURE;                       // intake pushed over (Servo Finder)
+        public static double stowed = 0.64;                         // intake folded (Servo Finder)
+        public static double deployed = 0.5;                       // intake pushed over (Servo Finder)
         public static double travelSec = DEFAULT;                      // a full 0-to-1 move, seconds (servo's speed)
     }
 
@@ -56,8 +56,8 @@ public class Tunables {
     }
 
     public static class FeederArm {                                    // "feeder_arm" in the configuration
-        public static double rest = MEASURE;                           // arm down, out of the POLLEN's way (Servo Finder)
-        public static double push = MEASURE;                           // arm up: the POLLEN is in the flywheel (Servo Finder)
+        public static double rest = 0.5;                           // arm down, out of the POLLEN's way (Servo Finder)
+        public static double push = 0.4;                           // arm up: the POLLEN is in the flywheel (Servo Finder)
         public static double pushSec = DEFAULT;                        // time to push up (the torque servo's catalog time)
         public static double returnSec = DEFAULT;                      // time to come back down (the same)
     }
@@ -65,7 +65,7 @@ public class Tunables {
     public static class FeederWheel {                                  // "feeder_wheel" in the configuration
         public static double power = DEFAULT;                          // wheel power, 0 to 1 (1.0)
         public static boolean alwaysOn = false;                        // true = runs all the time the flywheel is on
-        public static double stageSec = DEFAULT;                       // only while firing: runs this long before the arm pushes (0.2)
+        public static double stageSec = 0.5;                       // only while firing: runs this long before the arm pushes (0.2)
         public static double stopSec = DEFAULT;                        // only while firing: stops this long after the push starts, below 0 = before it (0.3)
     }
 }
