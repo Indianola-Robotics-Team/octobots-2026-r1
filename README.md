@@ -81,7 +81,7 @@ deploy servo's arm, the flywheel slide, the ramp, the shot angle. Measure the ro
    **Every servo, the first time (and after a new horn):** robot on a block, the servo's arm (horn) OFF or
    loose. In **Tune and check > Servo Finder**, choose the servo and press A: it goes to the middle (0.5) and
    holds. Put the arm on in the middle of the part's swing, tighten, and mark horn and shaft with a paint pen.
-   Then press D-pad right a few times and write down which way "bigger" moves the part (no servo standard:
+   Then press D-pad left once (a 0.01 step) and D-pad up a few times, and write down which way "bigger" moves the part (no servo standard:
    goBILDA says clockwise, but the mounting decides). Find each end in small steps until the part JUST
    touches; a humming servo is pushing: back off at once. Then save each position with A. Full steps:
    [A new servo part, step by step](https://crossbotics.com/ftc-helper/docs/guides/finders/#a-new-servo-part-step-by-step).

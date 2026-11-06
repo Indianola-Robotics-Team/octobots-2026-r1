@@ -12,7 +12,7 @@ expect shape intake_arm = 85 0.1       # folded up
 start
 expect motor intake power = 0 0.01         # not before it is deployed
 expect within 3 shape intake_arm = 220 0.1    # pushed over: down on its stop
-expect within 3 servo intake_deploy actual < 0.05   # the servo went back
+expect within 3 servo intake_deploy actual > 0.6   # the servo went back to stowed (0.64, Tunables.IntakeDeploy)
 expect shape intake_arm = 220 0.1      # and the intake stays down
 expect size match ok                   # deployed: 18 x 24 x 29 in
 hold g1.left_stick_x 0.6               # strafe right (BLUE, facing the red wall: the launcher end first)

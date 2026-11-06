@@ -63,19 +63,30 @@ public class Robot extends RobotDefinition {
         intake = add(Intake.motor("intake").part("gobilda-5203-117").holds(4)
                 .looks(intakeArm, roller, leftSpinner, rightSpinner));
 
-        // The launcher: one 96 mm wheel. Shots leave up the front ramp. Robot 1 shoots POLLEN only.
-        // Two feed parts: the "feeder_wheel" CR servo (a goBILDA Speed servo set to spin) turns Gecko wheels that move the
-        // POLLEN up to the "feeder_arm" (a goBILDA torque servo), which pushes each one up into the flywheel and comes back.
+        // The launcher: one 96 mm wheel, left of the middle. Shots leave up the front ramp. Robot 1 shoots POLLEN only.
+        // A squeeze feeder: the "feeder_wheel" CR servo (a goBILDA Speed servo set to spin) turns two 48 mm Gecko wheels
+        // (right side) that squeeze the POLLEN against half Gecko wheels on the "feeder_arm" (left side, a goBILDA torque
+        // servo), moving it forward. Then the arm tilts up and pushes the POLLEN into the flywheel, and comes back.
+        // The arm's rest position sets the squeeze gap (Tunables.FeederArm rest).
         // The wheel runs only while firing (first, then the arm pushes) or all the time: Tunables.FeederWheel alwaysOn.
-        // Two shapes: its sliding mount and the wheel riding on it.
+        // Its shapes: the flywheel's sliding mount and the wheel riding on it; the arm with its pads; the feed wheels.
+        // Every feeder place and the arm's angles are est. from a photo: measure ours.
         // "launcher", "feeder_arm", "feeder_wheel" = names in the robot configuration. Numbers: Tunables.Launcher, .FeederArm, .FeederWheel.
         // optional(): the robot runs without them.
-        Shape launcherSlide = Shape.slide().name("launcher_slide").atMm(40, 5, 120).sizeMm(30, 30, 48)
+        Shape launcherSlide = Shape.slide().name("launcher_slide").atMm(40, 40, 120).sizeMm(30, 30, 48)
                 .passive().travelMm(20).note("est.");
         Shape flywheel = Shape.flywheel("gobilda-hogback-96").on("launcher_slide").atMm(0, 0, 48);
+        // The arm: a 48 mm L-channel, hinged at its back end on the tower; level at rest, tilted up to push.
+        Shape feederArm = Shape.arm().name("feeder_arm").atMm(10, 40, 100).sizeMm(48, 24, 24)
+                .angle("rest", 0).angle("push", 40).note("est.");
+        // The pads on the arm: two 32 mm Gecko wheels cut in half (they do not spin).
+        Shape armPads = Shape.box("feeder_pads").on("feeder_arm").atMm(24, -14, 0).sizeMm(32, 16, 32).note("est.");
+        // The feed wheels: two 48 mm Gecko wheels (soft 15A) lying flat, stacked on the CR servo's shaft.
+        Shape feedWheels = Shape.roller("gobilda-gecko-48-rex-15a").name("feed_wheels").atMm(30, -40, 100)
+                .axis("up").lengthMm(40).note("est.");
         launcher = add(Launcher.flywheel("launcher", "gobilda-5203-6000").reversed()
-                .feeder(Indexer.servo("feeder_arm").part("gobilda-2000-torque").optional())
-                .feedWheel(Indexer.crServo("feeder_wheel").part("gobilda-2000-speed").optional())
+                .feeder(Indexer.servo("feeder_arm").part("gobilda-2000-torque").optional().looks(feederArm, armPads))
+                .feedWheel(Indexer.crServo("feeder_wheel").part("gobilda-2000-speed").optional().looks(feedWheels))
                 .spinAtStart()   // at speed from START and between shots, ready to fire (LB lets it coast to park)
                 .looks(launcherSlide, flywheel)
                 .shotAngle(75));   // 75° up from the floor, out of the front (the planned ramp; the built one is 53°)
