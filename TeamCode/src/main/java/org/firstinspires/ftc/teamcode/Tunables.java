@@ -43,7 +43,7 @@ public class Tunables {
     /** kP and kF are goBILDA's tested numbers for this robot (from their starter code); speedRpm is ours. */
     public static class Launcher {                                     // "launcher" in the configuration
         public static double speedRpm = 2525;                          // TeleOp shot speed (each auto writes its own; goBILDA had 2679)
-        public static double stepRpm = DEFAULT;                        // speed change per D-pad press (100)
+        public static double stepRpm = 50;                             // speed change per D-pad press (library default 100)
         public static double readyBandRpm = DEFAULT;                   // "at speed" = this close to the target (60)
         public static double idleRpm = DEFAULT;                        // speed between shots, 0 = stop (0)
         public static double shotIntervalSec = DEFAULT;                // least time between two shots (0.25)

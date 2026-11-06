@@ -1,7 +1,7 @@
 # Robot 1, auto 3 "R1 Left Wall: Wait, Launch, Park Left" (autos/LeftWallWaitLaunchAndPark.java), as RED.
 # In a match our partner's shots tip the HIVE first; here four POLLEN dropped into the up CELL tip it. Then
 # the CELL on the left side is up. The back on the left wall, the 3rd tile out (0.6 in off centre, clear of
-# the FLOWER), facing the HIVE: wait 15 s, fire at 2325 RPM, then slide (no turn) to the left corner of our LOADING ZONE.
+# the FLOWER), facing the HIVE: wait 15 s, fire at the usual speed (speedRpm), then slide (no turn) to the left corner of our LOADING ZONE.
 # Run it from the ftc-helper-lib folder: ./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-auto-left.sim
 robot ../robot.properties
 set scatter realistic
@@ -24,7 +24,7 @@ expect launched = 0                        # it waits for our partner (15 s)
 expect within 25 launched >= 4
 expect within 30 phase STOPPED
 wait 0.5
-expect screen has "Fire all at 2325 RPM: done (4 fired)"
+expect screen has "Fire all: done (4 fired)"
 expect screen has "To the LOADING ZONE: done"
 expect screen not "skipped"
 expect screen not "cut short"

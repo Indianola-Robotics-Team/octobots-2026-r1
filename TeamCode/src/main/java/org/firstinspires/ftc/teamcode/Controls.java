@@ -14,7 +14,7 @@ import com.crossbotics.ftchelper.robot.Pad;
  * - the flywheel spins from START and stays at speed, ready. LB: coast it (when parked) / spin up again
  * - RB fires one POLLEN: the feeder wheel brings it to the feeder arm, and the arm pushes it into the wheel (it waits until the wheel is at
  *   speed; hold RB to keep firing until you let go)
- * - D-pad up/down: flywheel speed +/- 100 RPM
+ * - D-pad up/down: flywheel speed +/- 50 RPM (Tunables.Launcher.stepRpm)
  * - X: push the intake over again (if it did not fall at START)
  */
 @TeleOp(name = "R1 TeleOp")

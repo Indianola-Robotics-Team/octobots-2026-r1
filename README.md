@@ -119,8 +119,8 @@ time lost); its direction and heading count from the START heading.
 | Program | Place the robot | Shoots | Parks |
 | --- | --- | --- | --- |
 | **R1 Right Corner: Launch, Park Right** (`RightCornerLaunchAndPark.java`) | right of centre on our wall: the **back-left corner touching our wall, 20.5 in from the right-hand wall**, turned 52 degrees so the **front (the ramp) points at our HIVE's up CELL** | at once, at 2525 RPM (`speedRpm`'s number) | the zone's right corner, facing left (it turns while it drives) |
-| **R1 Right Wall: Launch, Park Right** (`RightWallLaunchAndPark.java`) | **back on the right wall, the 3rd tile out from our wall, centred in it**, front facing the HIVE | at once, at 2325 RPM: the HIVE is closer | the zone's right corner, facing left |
-| **R1 Left Wall: Wait, Launch, Park Left** (`LeftWallWaitLaunchAndPark.java`) | **back on the left wall, the 3rd tile out**, front facing the HIVE, **0.6 in off centre toward the field's centre line** (centred, it would overlap the FLOWER on that wall by 0.4 in) | after **15 s**, at 2325 RPM | the zone's left corner, facing right |
+| **R1 Right Wall: Launch, Park Right** (`RightWallLaunchAndPark.java`) | **back on the right wall, the 3rd tile out from our wall, centred in it**, front facing the HIVE | at once, at the usual speed (`speedRpm`) | the zone's right corner, facing left |
+| **R1 Left Wall: Wait, Launch, Park Left** (`LeftWallWaitLaunchAndPark.java`) | **back on the left wall, the 3rd tile out**, front facing the HIVE, **0.6 in off centre toward the field's centre line** (centred, it would overlap the FLOWER on that wall by 0.4 in) | after **15 s**, at the usual speed (`speedRpm`) | the zone's left corner, facing right |
 
 **Why the left one waits:** from the left, the HIVE's CELL on our side is the DOWN one at the start. Our
 partner's shots from the right tip the HIVE; then the CELL on the left is up and open to us. Run it only

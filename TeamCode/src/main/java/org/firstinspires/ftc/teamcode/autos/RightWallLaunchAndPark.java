@@ -13,9 +13,10 @@ import org.firstinspires.ftc.teamcode.Robot;
  * Start: the back (the intake) touching the right wall, the 3rd tile out from our wall, centred in it, the
  * front (the launcher) facing the HIVE. The up CELL's opening faces this side, so the shots come down into it.
  *
- * Route: fire from the start spot at 2325 RPM (the HIVE is closer than from auto 1's spot). Then it pushes
- * the intake over while it slides off the wall toward ours, and slides past the HIVE's frame to the right
- * corner of the LOADING ZONE (no turns): only its corner is over the zone's corner, which is a PARK.
+ * Route: fire from the start spot at the usual speed (Tunables.Launcher.speedRpm: this is the usual
+ * shooting spot). Then it pushes the intake over while it slides off the wall toward ours, and slides past
+ * the HIVE's frame to the right corner of the LOADING ZONE (no turns): only its corner is over the zone's
+ * corner, which is a PARK.
  * Plain numbers, the way the auto builder writes them, so the builder can open this file ("Start from
  * one of your autos") and show it on the map. Moves: inches, then the direction in degrees clockwise from
  * the robot's front; moveWithTurn's direction and heading count from the START heading.
@@ -27,7 +28,7 @@ public class RightWallLaunchAndPark extends Auto<Robot> {
     protected void steps(Steps s, Robot robot) {
         robot.deployAtStart = false;   // the back is on the wall: the intake is pushed over while it drives away
         s.start("Back on R wall, 3rd tile, centred, facing HIVE", 62, -11.8, 90)
-         .action(robot.launcher.fireAllAction(2325), 12)
+         .action(robot.launcher.fireAllAction(), 12)
          .parkWithSeconds(10)
          .alongside(Actions.deployIntake(robot))
          .move("Off the wall", 35.8, 308, 0.6)
