@@ -61,8 +61,8 @@ public class Tunables {
     }
 
     public static class FeederArm {                                    // "feeder_arm" in the configuration
-        public static double rest = 0.5;                               // arm down: its pads squeeze the POLLEN against the feed wheels (sets the gap: Servo Finder, step 0.001)
-        public static double push = 0.4;                               // arm tilted up: the POLLEN is in the flywheel (Servo Finder)
+        public static double rest = 0.37;                               // arm down: its pads squeeze the POLLEN against the feed wheels (sets the gap: Servo Finder, step 0.001)
+        public static double push = 0.28;                               // arm tilted up: the POLLEN is in the flywheel (Servo Finder)
         public static double pushSec = DEFAULT;                        // time to push up (the torque servo's catalog time)
         public static double returnSec = DEFAULT;                      // time to come back down (the same)
         public static double pushStep = DEFAULT;                       // D-pad left/right in TeleOp: push trim per press (0.01)
