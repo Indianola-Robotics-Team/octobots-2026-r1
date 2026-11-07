@@ -20,7 +20,9 @@ expect within 12 launched >= 4             # all four fired
 expect within 6 shape intake_arm = 220 0.1 # pushed over while it drives off the wall
 expect within 25 phase STOPPED
 wait 0.5
-expect screen has "Fire all: done (4 fired)"
+expect screen has "Fire 2: done (2 fired)"
+expect screen has "Bump back: done"
+expect screen has "Fire all: done (4 fired)"     # the count is all fired so far
 expect screen has "To the LOADING ZONE: done"
 expect screen not "skipped"
 expect screen not "cut short"

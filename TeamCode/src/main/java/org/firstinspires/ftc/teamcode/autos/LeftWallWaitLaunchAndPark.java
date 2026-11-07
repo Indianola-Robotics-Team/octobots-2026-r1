@@ -17,7 +17,8 @@ import org.firstinspires.ftc.teamcode.Robot;
  * launcher) facing the HIVE. Not quite centred: 0.6 in toward the field's centre line, so the robot clears
  * the FLOWER on this wall (centred, it would overlap it by 0.4 in).
  *
- * Route: wait 15 s, fire from the start spot at the usual speed (Tunables.Launcher.speedRpm; 8 s at most:
+ * Route: wait 15 s, fire two from the start spot at the usual speed, bump (2 in out, fast back to the wall) so
+ * the last two roll into the feeder, fire them (Tunables.Launcher.speedRpm; 4 s + 4 s at most:
  * the wait leaves less time). Then it pushes the intake over while it drives 8 in forward (clear of the
  * FLOWER), and slides to the left corner of the LOADING ZONE (no turns): only its corner is over the zone's
  * corner, which is a PARK.
@@ -33,7 +34,12 @@ public class LeftWallWaitLaunchAndPark extends Auto<Robot> {
         robot.deployAtStart = false;   // the back is on the wall: the intake is pushed over while it drives away
         s.start("Back on L wall, 3rd tile, 0.6in off centre, facing HIVE", -62, -11.2, -90)
          .waitSeconds("Wait for our partner", 15)
-         .action(robot.launcher.fireAllAction(), 8)
+         .action(robot.launcher.fireAction(2), 4)
+         // Bump: the back is on the wall, so out 2 in slowly, then back to the wall fast. The quick move back
+         // rolls the last two POLLEN forward into the feeder.
+         .move("Bump out", 2, 0, 0.3)
+         .move("Bump back", 2, 180, 1.0)
+         .action(robot.launcher.fireAllAction(), 4)
          .parkWithSeconds(8)
          .alongside(Actions.deployIntake(robot))
          .move("Off the wall", 8, 0, 0.6)

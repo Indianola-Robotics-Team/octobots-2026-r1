@@ -24,7 +24,9 @@ expect launched = 0                        # it waits for our partner (15 s)
 expect within 25 launched >= 4
 expect within 30 phase STOPPED
 wait 0.5
-expect screen has "Fire all: done (4 fired)"
+expect screen has "Fire 2: done (2 fired)"
+expect screen has "Bump back: done"
+expect screen has "Fire all: "                # with the 15 s wait and the bump it is tight on time: it may time out after the 4th shot
 expect screen has "To the LOADING ZONE: done"
 expect screen not "skipped"
 expect screen not "cut short"
