@@ -32,7 +32,7 @@ public class Robot extends RobotDefinition {
         // The library reverses the left side (front_left, back_left): Tune and check > Motor Direction Check checks it.
         // "front_left" ... "imu" = names in the robot configuration (Driver Station), exactly.
         drive(Drive.mecanum("front_left", "front_right", "back_left", "back_right")
-                .motor("gobilda-5203-312").wheel("gobilda-gripforce-mecanum-104")
+                .motor("gobilda-5203-312").wheel("gobilda-gripforce-mecanum-104").wheelMm(108.9)   // Drive Tuner, measured at power 0.5
                 .wheelsAtMm(400, 336)   // track (left-right), wheelbase (front-back), wheel centres: est., measure ours
                 // TODO check how our Control Hub is mounted: the way its logo and USB port face.
                 .imu("imu", LogoFacingDirection.UP, UsbFacingDirection.BACKWARD));

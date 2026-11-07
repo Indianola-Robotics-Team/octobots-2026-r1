@@ -21,12 +21,12 @@ public class Tunables {
         public static double maxPower = DEFAULT;                       // top wheel power at events, 0 to 1 (1.0)
         public static double practiceMaxPower = DEFAULT;               // top wheel power in PRACTICE (0.6)
         public static double slowSpeed = DEFAULT;                      // top power with the slow trigger held (0.3)
-        public static double strafeCorrection = DEFAULT;               // strafing: more push sideways (1.15; the Drive Tuner finds it)
+        public static double strafeCorrection = 1.115;                 // strafing: more push sideways (Drive Tuner, power 0.5)
         public static double turnKp = DEFAULT;                         // auto turns: push per degree off (0.012)
         public static double turnKd = DEFAULT;                         // auto turns: brake near the end (0.003)
         public static double moveMinPower = DEFAULT;                   // auto: least power that moves it (0.30)
         public static double slowDownIn = DEFAULT;                     // auto: slow down over at least the last N in of each move (0 = off; try 6)
-        public static boolean calibrated = false;                      // set true after the Drive Tuner (auto needs it)
+        public static boolean calibrated = true;                       // the Drive Tuner is done (auto needs it)
     }
 
     public static class Intake {                                       // "intake" in the configuration
@@ -43,7 +43,7 @@ public class Tunables {
 
     /** kP and kF are goBILDA's tested numbers for this robot (from their starter code); speedRpm is ours. */
     public static class Launcher {                                     // "launcher" in the configuration
-        public static double speedRpm = 2525;                          // TeleOp and autos 2-3 shot speed (auto 1 has its own; goBILDA had 2679)
+        public static double speedRpm = 3450;                          // TeleOp and autos 2-3 shot speed (auto 1 has its own; goBILDA had 2679)
         public static double stepRpm = 50;                             // speed change per D-pad press (library default 100)
         public static double readyBandRpm = DEFAULT;                   // "at speed" = this close to the target (60)
         public static double idleRpm = DEFAULT;                        // speed between shots, 0 = stop (0)
