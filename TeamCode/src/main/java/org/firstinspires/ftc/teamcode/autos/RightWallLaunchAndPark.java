@@ -31,7 +31,7 @@ public class RightWallLaunchAndPark extends Auto<Robot> {
          .action(robot.launcher.fireAllAction(), 12)
          .parkWithSeconds(10)
          .alongside(Actions.deployIntake(robot))
-         .move("Off the wall", 35.8, 308, 0.6)
+         .move("Off the wall", 42.8, 308, 0.6)
          .move("To the LOADING ZONE", 64.1, 348, 0.6);
     }
 
