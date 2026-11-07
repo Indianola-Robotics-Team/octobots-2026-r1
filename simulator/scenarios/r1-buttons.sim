@@ -1,0 +1,40 @@
+# Robot 1 buttons added for meet 1: left stick click = reverse drive, hold RT + right stick click =
+# field-centric (hard to hit by accident), D-pad right/left = feeder arm push trim, tap then hold RB = SPRAY.
+# Run it: from the ftc-helper-lib folder:
+#   ./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-buttons.sim
+robot ../robot.properties
+init "R1 TeleOp"
+set pose 56 40 -180
+start
+wait 1
+press g1.left_stick_button             # reverse drive on
+expect within 1 screen has "REVERSED: the back is the front"
+press g1.right_stick_button            # the right stick click alone: nothing
+wait 0.3
+expect screen has "Drive : robot"      # one click is NOT field-centric
+hold g1.right_trigger 1                # hold RT, then click the right stick: field-centric
+wait 0.3
+press g1.right_stick_button
+release all
+expect within 1 screen has "Drive : field"
+expect screen has "REVERSED is on"     # the pair did not also switch reverse drive off
+hold g1.right_trigger 1                # and again: back to robot-centric
+wait 0.3
+press g1.right_stick_button
+release all
+expect within 1 screen has "Drive : robot"
+press g1.left_stick_button             # reverse drive off
+expect within 1 screen not "REVERSED"
+press g1.dpad_right                    # feeder arm: push further (rest 0.5, push 0.4: further = lower)
+press g1.dpad_right
+expect within 1 screen has "FeederArm push : 0.380"
+press g1.dpad_left
+expect within 1 screen has "FeederArm push : 0.390"
+press g1.right_bumper                  # tap RB, then press and hold it: SPRAY
+wait 0.1
+hold g1.right_bumper
+expect within 1.5 screen has "Fire : SPRAY"
+expect within 4 launched >= 2
+release all
+stop
+expect error none

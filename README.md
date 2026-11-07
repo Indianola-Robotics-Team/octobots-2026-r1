@@ -62,14 +62,17 @@ intake is at the back. Driving forward = launcher first. Device names: `front_le
 `back_right` -> `front_left`. Then run **Tune and check > Motor Direction Check**.
 
 **Buttons (R1 TeleOp, one driver on gamepad 1):** left stick drive and strafe, right stick X turn; **LT
-slow** (the further you pull it, the slower, like last season); left stick click slow on/off; right stick
-double-click field-centric on/off (forward = away from the driver, however the robot faces). **LB** intake on/off,
+slow** (the further you pull it, the slower, like last season); **left stick
+click reverse drive** on/off (the back is the front; two buzzes = on). Field-centric (forward = away from the
+driver, not vetted yet): hold **RT**, then click the right stick. **LB** intake on/off,
 double-tap LB pushes out until the next tap (the feed wheel turns backward too; the intake starts by itself
 once it is deployed). The flywheel spins up at START and stays at speed. **B** switches it off and on; off,
 **RB** still fires (it spins up, fires, and switches off again). **RB** fires one POLLEN (hold to keep
-firing), D-pad up/down flywheel speed (50 RPM a press). **X** deploys the intake again. **BACK** pauses
+firing; tap, then press and hold: SPRAY, as fast as it can, also in the last 5 s), D-pad up/down flywheel speed
+(50 RPM a press), D-pad right/left feeder arm push further/less (0.01 a press; the screen shows the number to
+copy into `Tunables.FeederArm.push`). **X** deploys the intake again. **BACK** pauses
 everything (again: go on). **GUIDE** shows this map (hold GUIDE 1 s after START, PRACTICE profile: the
-tuning menu). Free: A, Y, RT, D-pad left/right. Both gamepads buzz at 1:00, 1:40 and 1:59.
+tuning menu). Free: A, Y. Both gamepads buzz at 1:00, 1:40 and 1:59.
 **Four pieces at most** (rule G407): nothing in the code stops the intake at 4 (`holds(4)` only tells
 the simulator), so the driver taps **LB** (intake off) when the robot is full.
 
@@ -198,6 +201,12 @@ Check it (size rules, the intake drops at START, picks up a POLLEN, fires it):
 
 ```bash
 ./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-v1.sim
+```
+
+The buttons added for meet 1 (reverse drive, the field-centric pair, the feeder arm trim, SPRAY):
+
+```bash
+./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-buttons.sim
 ```
 
 and the three autonomous programs (each fires all four, then parks in the LOADING ZONE):

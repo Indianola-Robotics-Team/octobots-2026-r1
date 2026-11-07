@@ -22,6 +22,8 @@ public class Tunables {
         public static double practiceMaxPower = DEFAULT;               // top wheel power in PRACTICE (0.6)
         public static double slowSpeed = DEFAULT;                      // top power with the slow trigger held (0.3)
         public static double strafeCorrection = 1.115;                 // strafing: more push sideways (Drive Tuner, power 0.5)
+        // Strafing LEFT, if it slips more that way: Drive Tuner "Strafe left" test, then remove the // (not written = 1.115 both ways)
+        // public static double strafeCorrectionLeft = 1.115;
         public static double turnKp = DEFAULT;                         // auto turns: push per degree off (0.012)
         public static double turnKd = DEFAULT;                         // auto turns: brake near the end (0.003)
         public static double moveMinPower = DEFAULT;                   // auto: least power that moves it (0.30)
@@ -45,9 +47,10 @@ public class Tunables {
     public static class Launcher {                                     // "launcher" in the configuration
         public static double speedRpm = 3450;                          // TeleOp and autos 2-3 shot speed (auto 1 has its own; goBILDA had 2679)
         public static double stepRpm = 50;                             // speed change per D-pad press (library default 100)
-        public static double readyBandRpm = DEFAULT;                   // "at speed" = this close to the target (60)
+        public static double readyBandRpm = 100;                       // "at speed" = this close to the target (library 60: at 3450 the wheel sat near 3429 and seldom fired)
         public static double idleRpm = DEFAULT;                        // speed between shots, 0 = stop (0)
         public static double shotIntervalSec = DEFAULT;                // least time between two shots (0.25)
+        public static boolean sprayEnabled = true;                     // RB tap, then press and hold: fires as fast as it can (no speed wait); also the last 5 s of TeleOp
         public static double maxFiringQueue = DEFAULT;                 // fire presses that may wait (4; 0 = no queue: a press during a shot is ignored)
         public static double kP = 40;                                  // speed control: push per speed error (goBILDA)
         public static double kI = 0;                                   // speed control: not used (goBILDA)
@@ -62,6 +65,7 @@ public class Tunables {
         public static double push = 0.4;                               // arm tilted up: the POLLEN is in the flywheel (Servo Finder)
         public static double pushSec = DEFAULT;                        // time to push up (the torque servo's catalog time)
         public static double returnSec = DEFAULT;                      // time to come back down (the same)
+        public static double pushStep = DEFAULT;                       // D-pad left/right in TeleOp: push trim per press (0.01)
     }
 
     public static class FeederWheel {                                  // "feeder_wheel" in the configuration
