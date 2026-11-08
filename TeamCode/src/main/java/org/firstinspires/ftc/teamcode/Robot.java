@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot.LogoFacingDirection;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot.UsbFacingDirection;
 import com.crossbotics.ftchelper.robot.Action;
+import com.crossbotics.ftchelper.robot.Camera;
 import com.crossbotics.ftchelper.robot.Drive;
 import com.crossbotics.ftchelper.robot.Indexer;
 import com.crossbotics.ftchelper.robot.Intake;
@@ -14,7 +15,7 @@ import com.crossbotics.ftchelper.robot.Shape;
 /**
  * Robot 1, version 1 (file 1 of 5): WHAT is on the robot. A goBILDA Strafer chassis (mecanum wheels: it
  * also drives sideways), a folding intake that a servo pushes over at START, tubing rollers, two corner
- * spinners, and a flywheel fed by Gecko wheels. POLLEN only. FRONT = the launcher (shots go up a front ramp).
+ * spinners, a flywheel fed by Gecko wheels, and a Logitech webcam. POLLEN only. FRONT = the launcher (shots go up a front ramp).
  * Sizes and places in mm: forward, left, up from the chassis middle on the tiles, or from the shape it rides on.
  * "est." = an estimate (CAD or photos): measure ours. More: https://crossbotics.com/teams/8938-octobots/build/
  */
@@ -22,6 +23,7 @@ public class Robot extends RobotDefinition {
     public Positioner intakeDeploy;
     public Intake intake;
     public Launcher launcher;
+    public Camera camera;
 
     /** Push the intake over right after START? An autonomous that starts against a wall sets it false. */
     public boolean deployAtStart = true;
@@ -95,6 +97,12 @@ public class Robot extends RobotDefinition {
         // Parts that do not move: the tower in front of the launcher, and our ramp out of the front (est.).
         fixed(Shape.box("tower").atMm(88, 0, 40).sizeMm(48, 184, 264),
               Shape.box("ramp").atMm(180, 0, 200).sizeMm(120, 150, 10).tiltDeg(75));   // 75° up from the floor toward the front (planned; built at 53°), like the shots
+
+        // The camera: a Logitech webcam on a USB port. "Webcam 1" = its name in the robot configuration.
+        // goal(...): the HIVE it looks for (our alliance's, chosen in INIT). autoExposure(): at INIT it tries a few
+        // brightness settings and keeps the one that sees the most AprilTags. The right stick click aims with it (Controls.java).
+        // A camera missing from the configuration is a warning at INIT, not a stop. Its numbers: Tunables.Webcam1.
+        camera = add(Camera.webcam("Webcam 1").autoExposure().goal("BLUE SCORING", "RED SCORING"));
 
         // Right after START, push the intake over (the library moves nothing in INIT: its safety choice).
         atStart(() -> deployAtStart ? Actions.deployIntake(this)

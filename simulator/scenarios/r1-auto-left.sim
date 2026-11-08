@@ -9,7 +9,7 @@ set piece POLLEN 18.6 -12.75 62
 set piece POLLEN 18.6 -12.75 66
 set piece POLLEN 18.6 -12.75 70
 set piece POLLEN 18.6 -12.75 74
-wait 2
+wait 4                                     # the pieces drop in, then the HIVE takes 2 s to tip
 expect tips "Red" >= 1                # the HIVE has tipped: the left CELL is up
 init "R1 Left Wall: Wait, Launch, Park Left"
 press g1.b                                 # RED

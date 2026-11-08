@@ -74,4 +74,13 @@ public class Tunables {
         public static double stageSec = 0.5;                           // only while firing: runs this long before the arm pushes (0.2)
         public static double stopSec = DEFAULT;                        // only while firing: stops this long after the push starts, below 0 = before it (0.3)
     }
+
+    public static class Webcam1 {                                      // "Webcam 1" in the configuration (the Logitech camera)
+        public static boolean liveView = true;                         // its picture on the Driver Station (menu > Camera Stream, in INIT), PRACTICE only
+    }
+
+    public static class Aim {                                          // a fixed name: always Aim (the library's defaults for the rest)
+        public static boolean aimOnFire = true;                        // RB with the HIVE in view: turn to it, then fire
+        public static double aimOnFireSec = 0.5;                       // the most RB waits for that turn before it fires anyway
+    }
 }

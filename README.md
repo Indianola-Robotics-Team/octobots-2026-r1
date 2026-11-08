@@ -56,7 +56,8 @@ the flywheel, then comes back down), and a ramp that sends shots out. Robot 1 ha
 intake is at the back. Driving forward = launcher first. Device names: `front_left`, `front_right`,
 `back_left`, `back_right` (the drive motors, with the launcher as the front), `imu`, `intake`,
 `intake_deploy` (the deploy servo), `launcher`, `feeder_wheel` (the CR servo; it was `feeder`), `feeder_arm`
-(the torque servo, a SERVO in the configuration, not a CR servo). **A Control Hub set up with the old names**
+(the torque servo, a SERVO in the configuration, not a CR servo), `Webcam 1` (the Logitech webcam, on a USB port: add it
+with Scan in the configuration; it only looks for now, no button aims with it). **A Control Hub set up with the old names**
 (when the intake was the front): keep every wire in its port and swap the four drive names: old
 `front_left` -> `back_right`, old `front_right` -> `back_left`, old `back_left` -> `front_right`, old
 `back_right` -> `front_left`. Then run **Tune and check > Motor Direction Check**.

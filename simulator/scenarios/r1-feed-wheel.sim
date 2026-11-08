@@ -22,10 +22,10 @@ set tunable FeederWheel.stopSec 0.3
 init "R1 TeleOp"
 start
 expect within 4 motor launcher velocity > 1000
-expect servo feeder_arm target = 0 0.01          # the arm waits down
+expect servo feeder_arm target = 0.37 0.01          # the arm waits down
 press g1.right_bumper
 expect within 2 launched = 1
-expect within 2 servo feeder_arm target = 0 0.01  # the arm came back down
+expect within 2 servo feeder_arm target = 0.37 0.01  # the arm came back down
 stop
 
 expect error none
