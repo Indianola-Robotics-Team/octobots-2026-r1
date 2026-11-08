@@ -38,7 +38,7 @@ expect robot y < -50
 expect robot x > -51
 expect robot x < -44
 expect robot heading = -90 5
-expect points "red" >= 18                  # 10 already on the field for red + LEAVE 3 + PARK 5
+expect points "red" >= 16                  # LEAVE 3 + PARK 5 + about 9-10 from the pieces (the scatter changes it by 1): losing LEAVE or PARK fails
 print robot
 print pieces
 expect error none
