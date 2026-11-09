@@ -77,6 +77,7 @@ public class Tunables {
 
     public static class Webcam1 {                                      // "Webcam 1" in the configuration (the Logitech camera)
         public static boolean liveView = true;                         // its picture on the Driver Station (menu > Camera Stream, in INIT), PRACTICE only
+        public static double pitchDeg = 35;                            // tilted 35 degrees up (to see the HIVE): the aim uses the floor's angle. TODO measure the mount
     }
 
     public static class Aim {                                          // a fixed name: always Aim (the library's defaults for the rest)
