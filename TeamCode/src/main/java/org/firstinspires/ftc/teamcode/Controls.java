@@ -50,9 +50,8 @@ public class Controls extends ControlMap<Robot> {
 
     @Override
     protected void buttons(Robot robot, Pad g1, Pad g2) {
-        g1.rb.hold(robot.launcher::fireWhileHeld, robot.launcher::ceaseFire)
-                .says("fire one; hold: keep firing; tap, then hold: spray");   // the launcher's usual fire button
-        // D-pad up / down (flywheel speed): still the launcher's own until the library release after v0.38.0.
+        robot.launcher.fireOn(g1.rb);                                          // tap: one; hold: keep firing; tap, then hold: spray
+        robot.launcher.speedOn(g1.dpadUp, g1.dpadDown);                        // D-pad up / down: flywheel speed, 50 RPM a tap
         g1.lb.tapOrDoubleTap(() -> {                                            // intake: tap on/off, double-tap out
             if (robot.intake.isPushingOut()) robot.intake.in();
             else robot.intake.toggle();

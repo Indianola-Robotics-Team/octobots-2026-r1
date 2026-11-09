@@ -4,6 +4,8 @@
 #   ./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-buttons.sim
 robot ../robot.properties
 init "R1 TeleOp"
+expect screen has "G1 D-pad up: hold: speed up"       # the flywheel speed buttons are there (speedOn in Controls.java)
+expect screen has "G1 D-pad down: hold: speed down"
 set pose 56 40 -180
 start
 wait 1
