@@ -19,8 +19,9 @@ import org.firstinspires.ftc.teamcode.Robot;
  * the HIVE's frame to the right corner of the LOADING ZONE (no turns): only its corner is over the zone's
  * corner, which is a PARK.
  * Plain numbers, the way the auto builder writes them, so the builder can open this file ("Start from
- * one of your autos") and show it on the map. Moves: inches, then the direction in degrees clockwise from
- * the robot's front; moveWithTurn's direction and heading count from the START heading.
+ * one of your autos") and show it on the map. Moves: inches, then the direction in degrees from the robot's
+ * front, counterclockwise like every angle (90 = left, -90 = right); forward/back need no angle.
+ * moveWithTurn's direction and heading count from the START heading, counterclockwise too.
  * simulator/scenarios/r1-auto-right.sim checks it.
  */
 @Autonomous(name = "R1 Right Wall: Launch, Park Right", preselectTeleOp = "R1 TeleOp")
@@ -32,13 +33,13 @@ public class RightWallLaunchAndPark extends Auto<Robot> {
          .action(robot.launcher.fireAction(2), 6)
          // Bump: the back is on the wall, so out 2 in slowly, then back to the wall fast. The quick move back
          // rolls the last two POLLEN forward into the feeder.
-         .move("Bump out", 2, 0, 0.3)
-         .move("Bump back", 2, 180, 1.0)
+         .forward("Bump out", 2, 0.3)
+         .back("Bump back", 2, 1.0)
          .action(robot.launcher.fireAllAction(), 6)
          .parkWithSeconds(10)
          .alongside(Actions.deployIntake(robot))
-         .move("Off the wall", 42.8, 308, 0.6)   // was 35.8: +7 in because it came up short. Strafing left may slip more than right (the Drive Tuner tests right only). After a left strafe test, put back 35.8
-         .move("To the LOADING ZONE", 64.1, 348, 0.6);
+         .move("Off the wall", 42.8, 52, 0.6)   // was 35.8: +7 in because it came up short. Strafing left may slip more than right (the Drive Tuner tests right only). After a left strafe test, put back 35.8
+         .move("To the LOADING ZONE", 64.1, 12, 0.6);
     }
 
     // BIOBUZZ's field is turned half a turn between the alliances (not mirrored): the same route,

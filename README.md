@@ -118,9 +118,11 @@ the zone, only its corner over the zone's corner: the zone stays free for our pa
 
 **Written like the auto builder writes them:** plain numbers in the steps, so the simulator's auto builder
 (and crossbotics.com's path builder) can open each file ("Start from one of your autos"), show it on the
-map, and change it. A move is `move(name, inches, direction, power)`: the direction in degrees clockwise
-from the robot's front. `moveWithTurn(name, inches, direction, heading, power)` turns while it drives (no
-time lost); its direction and heading count from the START heading.
+map, and change it. A straight move is a word: `forward(name, inches, power)`, `back(...)`, `left(...)`,
+`right(...)`. A move at an angle is `move(name, inches, direction, power)`: the direction in degrees from
+the robot's front, counterclockwise like every angle (90 = left, -90 = right; library v0.40.0 and later).
+`moveWithTurn(name, inches, direction, heading, power)` turns while it drives (no time lost); its direction
+and heading count from the START heading, counterclockwise too.
 
 | Program | Place the robot | Shoots | Parks |
 | --- | --- | --- | --- |
