@@ -39,7 +39,7 @@ used by robot 1: it shoots from one spot). They show the lines to copy into `Tun
 `Robot.java`. No finder files of our own: the library has them all.
 The full first-time order, with what "pass" means at each step: the team pages' Part C,
 "The first robot sessions" (https://crossbotics.com/teams/8938-octobots/robot/).
-How: `ftc-helper-lib/docs/guides/finders.md`.
+How: [Tuning](https://crossbotics.com/ftc-helper/docs/tuning/).
 
 ## Version 1
 
@@ -90,7 +90,7 @@ deploy servo's arm, the flywheel slide, the ramp, the shot angle. Measure the ro
    Then press D-pad left once (a 0.01 step) and D-pad up a few times, and write down which way "bigger" moves the part (no servo standard:
    goBILDA says clockwise, but the mounting decides). Find each end in small steps until the part JUST
    touches; a humming servo is pushing: back off at once. Then save each position with A. Full steps:
-   [A new servo part, step by step](https://crossbotics.com/ftc-helper/docs/guides/finders/#a-new-servo-part-step-by-step).
+   [A new servo part, step by step](https://crossbotics.com/ftc-helper/docs/tuning/03-servo-finder/#a-new-servo-part-step-by-step).
 3. The deploy servo's positions with **Tune and check > Servo Finder** (`Tunables.IntakeDeploy`: `stowed`,
    `deployed`). `travelSec` is the time for a full 0-to-1 move (now from the servo's catalog speed):
    keep it, or time the push and divide by `deployed - stowed`.
