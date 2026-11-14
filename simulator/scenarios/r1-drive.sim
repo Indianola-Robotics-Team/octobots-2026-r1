@@ -1,6 +1,5 @@
-# Robot 1 road 3: robot 1's drive. It strafes in a straight line (mecanum), and its two drive buttons
+# Robot 1's drive. It strafes in a straight line (mecanum), and its two drive buttons
 # work: left stick click = reverse drive, hold RT + click the right stick = field-centric.
-# Save it in your project as simulator/scenarios/r1-drive.sim.
 init "R1 TeleOp"
 set pose 56 40 -180                    # open floor, facing the red wall
 start

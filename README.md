@@ -2,13 +2,13 @@
 
 The code for Indianola Robotics' (FTC team 8938) first robot of the BIOBUZZ season. It is the FTC SDK
 (FtcRobotController 12.0) with our helper library, [ftc-helper-lib](https://github.com/crossbotics/ftc-helper-lib),
-in the `ftc-helper-lib` folder (a git submodule). **Library version: v0.40.0** (`git submodule status`
+in the `ftc-helper-lib` folder (a git submodule). **Library version: v0.41.0** (`git submodule status`
 shows it). The team's step-by-step pages (https://crossbotics.com/teams/8938-octobots/) match this version.
 
 ## Get it
 
 ```bash
-git clone --recurse-submodules https://github.com/jasoncross/octobots-2026-r1.git
+git clone --recurse-submodules https://github.com/Indianola-Robotics-Team/octobots-2026-r1.git
 ```
 
 Open the folder in Android Studio (Narwhal 3 Feature Drop or newer). Builds need JDK 21.
