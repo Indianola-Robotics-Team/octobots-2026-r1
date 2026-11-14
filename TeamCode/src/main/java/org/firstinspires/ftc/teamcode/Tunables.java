@@ -19,7 +19,7 @@ import static com.crossbotics.ftchelper.robot.Starting.*;
 public class Tunables {
     public static class Drive {                                        // a fixed name: always Drive
         public static double maxPower = DEFAULT;                       // top wheel power at events, 0 to 1 (1.0)
-        public static double practiceMaxPower = DEFAULT;               // top wheel power in PRACTICE (0.6)
+        public static double practiceMaxPower = 0.6;                   // top wheel power in PRACTICE (the library's default is maxPower since v0.41.0)
         public static double slowSpeed = DEFAULT;                      // top power with the slow trigger held (0.3)
         public static double strafeCorrection = 1.115;                 // strafing: more push sideways (Drive Tuner, power 0.5)
         // Strafing LEFT, if it slips more that way: Drive Tuner "Strafe left" test, then remove the // (not written = 1.115 both ways)
@@ -28,6 +28,10 @@ public class Tunables {
         public static double turnKd = DEFAULT;                         // auto turns: brake near the end (0.003)
         public static double moveMinPower = DEFAULT;                   // auto: least power that moves it (0.30)
         public static double slowDownIn = DEFAULT;                     // auto: slow down over at least the last N in of each move (0 = off; try 6)
+        public static double turnMinPower = DEFAULT;                   // auto turns: least power while still off (0; Move Tuner)
+        public static double turnToleranceDeg = DEFAULT;               // auto turns: done this close, in degrees (1.0; Move Tuner)
+        public static double moveTurnScale = DEFAULT;                  // moveWithTurn: how hard it turns while it moves (0.60; Move Tuner)
+        public static double moveMaxTurnPower = DEFAULT;               // moveWithTurn: most turn power (0.35; Move Tuner)
         public static boolean calibrated = true;                       // the Drive Tuner is done (auto needs it)
     }
 

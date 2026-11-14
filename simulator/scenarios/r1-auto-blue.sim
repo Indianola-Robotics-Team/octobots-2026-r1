@@ -1,0 +1,25 @@
+# Robot 1, auto 1 "R1 Right Corner: Launch, Park Right", as BLUE: the same route from the blue wall
+# (the field is turned half a turn, so every simulator number is the RED one turned: x and y change sign,
+# the heading changes by 180).
+robot ../robot.properties
+init "R1 Right Corner: Launch, Park Right"
+press g1.x                                 # BLUE
+wait 0.5
+expect robot x = -51.6 0.3
+expect robot y = 58.5 0.3
+expect robot heading = -142.2 1
+expect stored = 4
+start
+expect within 12 launched >= 4             # all four fired
+expect within 25 phase STOPPED
+wait 0.5
+expect screen has "To the LOADING ZONE: done"
+expect screen not "skipped"
+expect screen not "cut short"
+expect bumped none
+expect robot y < 58                        # parked at the right corner of the blue LOADING ZONE
+expect robot y > 50
+expect robot x < 26
+expect robot x > 19
+expect robot heading = -90 5
+expect error none

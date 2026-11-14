@@ -1,0 +1,16 @@
+# Robot 1, auto 1 with Tunables.Drive.slowDownIn = 6: every move slows down over its last 6 in.
+# It must still finish every step, park, and touch nothing.
+robot ../robot.properties
+set tunable Drive.slowDownIn 6
+init "R1 Right Corner: Launch, Park Right"
+press g1.b                                 # RED
+wait 0.5
+start
+expect within 30 phase STOPPED
+wait 0.5
+expect screen has "To the LOADING ZONE: done"
+expect screen not "skipped"
+expect screen not "cut short"
+expect bumped none
+print robot
+expect error none

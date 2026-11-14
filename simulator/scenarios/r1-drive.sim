@@ -1,0 +1,19 @@
+# Robot 1 road 3: robot 1's drive. It strafes in a straight line (mecanum), and its two drive buttons
+# work: left stick click = reverse drive, hold RT + click the right stick = field-centric.
+# Save it in your project as simulator/scenarios/r1-drive.sim.
+init "R1 TeleOp"
+set pose 56 40 -180                    # open floor, facing the red wall
+start
+hold g1.left_stick_x 0.6               # strafe right
+wait 1
+release all
+expect within 1 robot x < 48           # it moved sideways...
+expect robot y = 40 0.5                # ...not forward or back
+press g1.left_stick_button             # reverse drive on
+expect within 1 screen has "REVERSED: the back is the front"
+hold g1.right_trigger 1                # hold RT, then click the right stick: field-centric
+wait 0.3
+press g1.right_stick_button
+release all
+expect within 1 screen has "Drive : field"
+expect error none

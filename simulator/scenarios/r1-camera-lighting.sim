@@ -1,0 +1,8 @@
+# Robot 1: the webcam's lighting test runs at INIT, and its line is on the Driver Station.
+robot ../robot.properties
+init "R1 TeleOp"
+set pose 57 -13 100                        # after INIT (a TeleOp's INIT puts the robot on its start spot): RED side, turned 10 degrees left of the HIVE: its tags are in view
+expect within 6 screen has "Webcam 1 lighting"
+print screen
+stop
+expect error none

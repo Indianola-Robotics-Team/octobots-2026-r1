@@ -1,0 +1,11 @@
+# Robot 1's button map at INIT shows the words from each .says(...) in Controls.java.
+robot ../robot.properties
+init "R1 TeleOp"
+expect screen has "intake on/off; double-tap: out until tapped"
+expect screen has "flywheel on/off"
+expect screen has "reverse drive on/off"
+expect screen has "auto-aim on/off"
+expect screen has "deploy intake"
+expect screen has "camera: lighting test again"
+stop
+expect error none

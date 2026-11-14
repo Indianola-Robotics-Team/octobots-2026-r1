@@ -1,0 +1,19 @@
+# Robot 1: each autonomous shows where to place the robot at INIT. A second person checks it at the field.
+robot ../robot.properties
+init "R1 Right Corner: Launch, Park Right"
+press g1.b                                 # RED
+wait 0.5
+expect screen has "Place robot : Back corner on wall 20.5in from R, front at HIVE"
+expect screen not "!! PRACTICE profile"
+stop
+init "R1 Right Wall: Launch, Park Right"
+press g1.b
+wait 0.5
+expect screen has "Place robot : Back on R wall, 3rd tile, centred, facing HIVE"
+stop
+init "R1 Left Wall: Wait, Launch, Park Left"
+press g1.b
+wait 0.5
+expect screen has "Place robot : Back on L wall, 3rd tile"
+stop
+expect error none

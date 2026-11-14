@@ -1,0 +1,19 @@
+# Robot 1: the Tune and check menu lists the tools for robot 1's parts, and no others.
+robot ../robot.properties
+init "Tune and check"
+expect screen has "Robot: Robot"
+expect screen has "Hardware Check"
+expect screen has "Motor Direction Check"
+expect screen has "Encoder Check"
+expect screen has "Servo Finder"
+expect screen has "Flywheel Finder"
+expect screen has "Drive Tuner"
+expect screen has "Shot Tuner"
+expect screen has "Move Tuner"
+expect screen not "Hood Finder"
+expect screen not "Motor Finder"
+expect screen not "Feed Stop Finder"
+expect screen not "Odometry Tuner"
+expect screen not "Piece Tuner"
+stop
+expect error none

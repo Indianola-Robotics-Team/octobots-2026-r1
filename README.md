@@ -57,7 +57,7 @@ intake is at the back. Driving forward = launcher first. Device names: `front_le
 `back_left`, `back_right` (the drive motors, with the launcher as the front), `imu`, `intake`,
 `intake_deploy` (the deploy servo), `launcher`, `feeder_wheel` (the CR servo; it was `feeder`), `feeder_arm`
 (the torque servo, a SERVO in the configuration, not a CR servo), `Webcam 1` (the Logitech webcam, on a USB port: add it
-with Scan in the configuration; it only looks for now, no button aims with it). **A Control Hub set up with the old names**
+with Scan in the configuration; the right stick click turns auto-aim on and off, and RB turns to the HIVE before it fires). **A Control Hub set up with the old names**
 (when the intake was the front): keep every wire in its port and swap the four drive names: old
 `front_left` -> `back_right`, old `front_right` -> `back_left`, old `back_left` -> `front_right`, old
 `back_right` -> `front_left`. Then run **Tune and check > Motor Direction Check**.
@@ -126,7 +126,7 @@ and heading count from the START heading, counterclockwise too.
 
 | Program | Place the robot | Shoots | Parks |
 | --- | --- | --- | --- |
-| **R1 Right Corner: Launch, Park Right** (`RightCornerLaunchAndPark.java`) | right of centre on our wall: the **back-left corner touching our wall, 20.5 in from the right-hand wall**, turned 52 degrees so the **front (the ramp) points at our HIVE's up CELL** | at once, at 2525 RPM (`speedRpm`'s number) | the zone's right corner, facing left (it turns while it drives) |
+| **R1 Right Corner: Launch, Park Right** (`RightCornerLaunchAndPark.java`) | right of centre on our wall: the **back-left corner touching our wall, 20.5 in from the right-hand wall**, turned to heading 37.8 so the **front (the ramp) points at our HIVE's up CELL** | at once, at 3750 RPM (an estimate in the auto's own lines: tune it; `speedRpm` is 3450) | the zone's right corner, facing left (it turns while it drives) |
 | **R1 Right Wall: Launch, Park Right** (`RightWallLaunchAndPark.java`) | **back on the right wall, the 3rd tile out from our wall, centred in it**, front facing the HIVE | at once, at the usual speed (`speedRpm`) | the zone's right corner, facing left |
 | **R1 Left Wall: Wait, Launch, Park Left** (`LeftWallWaitLaunchAndPark.java`) | **back on the left wall, the 3rd tile out**, front facing the HIVE, **0.6 in off centre toward the field's centre line** (centred, it would overlap the FLOWER on that wall by 0.4 in) | after **15 s**, at the usual speed (`speedRpm`) | the zone's left corner, facing right |
 

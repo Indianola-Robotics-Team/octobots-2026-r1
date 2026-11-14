@@ -1,0 +1,10 @@
+# Robot 1 road 2: the copied files build, and R1 TeleOp starts and runs with no error.
+# Save it in your project as simulator/scenarios/r1-start.sim.
+init "R1 TeleOp"
+expect error none                      # no red error at INIT (a wrong name stops it here)
+expect phase INIT
+start
+wait 1
+expect phase RUNNING                   # the TeleOp runs after START
+stop
+expect error none

@@ -1,0 +1,13 @@
+# Robot 1's webcam sees our HIVE's tags, and the right stick click turns the robot to the HIVE.
+robot ../robot.properties
+init "R1 TeleOp"
+press g1.b                             # in INIT: B = RED
+set pose 57 -13 100                    # after INIT (a TeleOp's INIT puts the robot on its start spot): RED side, turned 10 degrees left of the HIVE: its tags are in view
+wait 2                                 # the lighting test (autoExposure) runs in INIT
+start
+expect within 2 camera "Webcam 1" sees "RED SCORING"
+press g1.right_stick_button            # auto-aim on
+expect within 5 robot heading = 90 5   # the robot turned to face the HIVE
+press g1.right_stick_button            # auto-aim off
+stop
+expect error none

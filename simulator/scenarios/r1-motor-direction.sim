@@ -1,0 +1,17 @@
+# Robot 1: Tune and check > Motor Direction Check. Hold X: only the front left wheel runs.
+robot ../robot.properties
+init "Tune and check"
+press g1.dpad_down                         # from Hardware Check to Motor Direction Check
+press g1.a                                 # open it
+start
+expect within 1 screen has "(reversed)"    # the library reverses the left side
+hold g1.x                                  # front left
+expect within 1 screen has "RUNNING"
+expect motor front_right power = 0 0.01
+expect motor back_left power = 0 0.01
+expect motor back_right power = 0 0.01
+print motors
+release all
+expect within 1 screen not "RUNNING"
+stop
+expect error none

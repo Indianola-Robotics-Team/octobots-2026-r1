@@ -1,0 +1,21 @@
+# Robot 1's LB: a tap switches the intake on or off, a double tap pushes out until the next tap.
+robot ../robot.properties
+init "R1 TeleOp"
+set pose 56 40 -180                    # open floor: the intake (at the back) drops clear of the wall
+start
+expect within 3 motor intake power > 0.9   # deployed: the intake runs in
+wait 0.5
+press g1.lb                            # tap: off
+expect within 1 motor intake power = 0 0.01
+wait 0.5                               # wait, so the next tap is not a double tap
+press g1.lb                            # tap: on again
+expect within 1 motor intake power > 0.9
+wait 0.5
+press g1.lb                            # double tap: out
+press g1.lb
+expect within 1 motor intake power < -0.5
+wait 0.5
+press g1.lb                            # one tap: back to in
+expect within 1 motor intake power > 0.9
+stop
+expect error none
