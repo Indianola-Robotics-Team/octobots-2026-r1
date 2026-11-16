@@ -15,6 +15,7 @@ press g1.lb                            # double tap: out
 press g1.lb
 expect within 1 motor intake power < -0.5
 wait 0.5
+expect launched = 0                    # out: both feed wheels turn backward, so nothing is fired
 press g1.lb                            # one tap: back to in
 expect within 1 motor intake power > 0.9
 stop
