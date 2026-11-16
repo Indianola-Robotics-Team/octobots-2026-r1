@@ -64,19 +64,9 @@ public class Tunables {
         public static boolean batteryCompensation = false;             // off until proven on a real robot
     }
 
-    public static class FeederArm {                                    // "feeder_arm" in the configuration
-        public static double rest = 0.37;                               // arm down: its pads squeeze the POLLEN against the feed wheels (sets the gap: Servo Finder, step 0.001)
-        public static double push = 0.28;                               // arm tilted up: the POLLEN is in the flywheel (Servo Finder)
-        public static double pushSec = DEFAULT;                        // time to push up (the torque servo's catalog time)
-        public static double returnSec = DEFAULT;                      // time to come back down (the same)
-        public static double pushStep = DEFAULT;                       // D-pad left/right in TeleOp: push trim per press (0.01)
-    }
-
-    public static class FeederWheel {                                  // "feeder_wheel" in the configuration
-        public static double power = DEFAULT;                          // wheel power, 0 to 1 (1.0)
-        public static boolean alwaysOn = false;                        // true = runs all the time the flywheel is on
-        public static double stageSec = 0.5;                           // only while firing: runs this long before the arm pushes (0.2)
-        public static double stopSec = DEFAULT;                        // only while firing: stops this long after the push starts, below 0 = before it (0.3)
+    public static class Feeder {                                       // "feeder_left" and "feeder_right" in the configuration
+        public static double power = DEFAULT;                          // both wheels' power, -1 to 1 (1.0); below 0 = both turn the other way
+        public static double feedSec = DEFAULT;                        // time the wheels run per shot (0.4): two POLLEN go = less; none = more
     }
 
     public static class Webcam1 {                                      // "Webcam 1" in the configuration (the Logitech camera)

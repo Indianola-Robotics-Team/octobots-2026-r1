@@ -48,15 +48,15 @@ wheels (wheels with small rollers at 45 degrees), so the robot can also **strafe
 turning). On it: an intake that folds up at the start and is pushed over by a servo at START (then gravity
 holds it on a hard stop), Offset surgical tubing rollers (90 mm and 60 mm taking turns), two goBILDA 72 mm
 Boot-Wheel spinners at the intake's corners driven from the intake through miter gears, a flywheel on a
-sliding mount, two feed parts (a **feeder wheel**: Gecko wheels on a goBILDA Speed servo set to spin, it
-moves the POLLEN up to the ramp; and a **feeder arm** on a goBILDA torque servo, it pushes each POLLEN up into
-the flywheel, then comes back down), and a ramp that sends shots out. Robot 1 handles **POLLEN only**.
+sliding mount, a feeder (two **feed wheels**, one on each side of the POLLEN: Gecko wheels on two goBILDA
+Speed servos set to spin, turning opposite ways; they squeeze each POLLEN into the flywheel), and a ramp that
+sends shots out. Robot 1 handles **POLLEN only**.
 
 **The FRONT is the launcher end** (since 2026-11-04): shots go up the ramp out of the front, and the
 intake is at the back. Driving forward = launcher first. Device names: `front_left`, `front_right`,
 `back_left`, `back_right` (the drive motors, with the launcher as the front), `imu`, `intake`,
-`intake_deploy` (the deploy servo), `launcher`, `feeder_wheel` (the CR servo; it was `feeder`), `feeder_arm`
-(the torque servo, a SERVO in the configuration, not a CR servo), `Webcam 1` (the Logitech webcam, on a USB port: add it
+`intake_deploy` (the deploy servo), `launcher`, `feeder_left` and `feeder_right` (the two feed wheel servos,
+each a CONTINUOUS ROTATION SERVO in the configuration; they replace `feeder_wheel` and `feeder_arm`), `Webcam 1` (the Logitech webcam, on a USB port: add it
 with Scan in the configuration; the right stick click turns auto-aim on and off, and RB turns to the HIVE before it fires). **A Control Hub set up with the old names**
 (when the intake was the front): keep every wire in its port and swap the four drive names: old
 `front_left` -> `back_right`, old `front_right` -> `back_left`, old `back_left` -> `front_right`, old
@@ -66,14 +66,13 @@ with Scan in the configuration; the right stick click turns auto-aim on and off,
 slow** (the further you pull it, the slower, like last season); **left stick
 click reverse drive** on/off (the back is the front; two buzzes = on). Field-centric (forward = away from the
 driver, not vetted yet): hold **RT**, then click the right stick. **LB** intake on/off,
-double-tap LB pushes out until the next tap (the feed wheel turns backward too; the intake starts by itself
+double-tap LB pushes out until the next tap (both feed wheels turn backward too; the intake starts by itself
 once it is deployed). The flywheel spins up at START and stays at speed. **B** switches it off and on; off,
 **RB** still fires (it spins up, fires, and switches off again). **RB** fires one POLLEN (hold to keep
 firing; tap, then press and hold: SPRAY, as fast as it can, also in the last 5 s), D-pad up/down flywheel speed
-(50 RPM a press), D-pad right/left feeder arm push further/less (0.01 a press; the screen shows the number to
-copy into `Tunables.FeederArm.push`). **X** deploys the intake again. **BACK** pauses
+(50 RPM a press). **X** deploys the intake again. **BACK** pauses
 everything (again: go on). **GUIDE** shows this map (hold GUIDE 1 s after START, PRACTICE profile: the
-tuning menu). Free: A, Y. Both gamepads buzz at 1:00, 1:40 and 1:59.
+tuning menu). Free: A, D-pad right and left. Both gamepads buzz at 1:00, 1:40 and 1:59.
 **Four pieces at most** (rule G407): nothing in the code stops the intake at 4 (`holds(4)` only tells
 the simulator), so the driver taps **LB** (intake off) when the robot is full.
 
@@ -95,11 +94,10 @@ deploy servo's arm, the flywheel slide, the ramp, the shot angle. Measure the ro
    `deployed`). `travelSec` is the time for a full 0-to-1 move (now from the servo's catalog speed):
    keep it, or time the push and divide by `deployed - stowed`.
 4. The flywheel's numbers with **Tune and check > Flywheel Finder** (`Tunables.Launcher` kP..kF: today goBILDA's),
-   Then the feeder arm's `rest` and `push` with **Tune and check > Servo Finder** (`Tunables.FeederArm`: INIT
-   stops until they are written). Then watch a shot and tune the feeder wheel (`Tunables.FeederWheel`):
-   `alwaysOn = false` runs it only while firing: it turns `stageSec` (0.2 s) to bring the POLLEN to the arm, the
-   arm pushes, and the wheel stops `stopSec` (0.3 s) after the push starts (below 0 = before the push, 0 = as it
-   starts). `alwaysOn = true` runs it all the time the flywheel is on, and the arm pushes at once.
+   Then the feed wheels (`Tunables.Feeder`). First check the direction: set `feedSec` to 2, fire with no
+   POLLEN, and watch both wheels pull in. Both pull out: add `.reversed()` to the feeder in Robot.java. One
+   pulls out: change `alsoServoReversed` to `alsoServo`. Then watch shots: both wheels run `feedSec` (0.4 s) per
+   shot at `power` (1.0). Two POLLEN go at once: less `feedSec`. The POLLEN stops short: more.
 5. The wheel size and the strafe correction with **Tune and check > Drive Tuner**, then `Tunables.Drive.calibrated = true` (until then the
    autonomous refuses to run).
 6. The shot: its real launch angle and speed (see "The autonomous programs" below), then each start spot.
@@ -206,7 +204,7 @@ Check it (size rules, the intake drops at START, picks up a POLLEN, fires it):
 ./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-v1.sim
 ```
 
-The buttons added for meet 1 (reverse drive, the field-centric pair, the feeder arm trim, SPRAY):
+The buttons added for meet 1 (reverse drive, the field-centric pair, SPRAY):
 
 ```bash
 ./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-buttons.sim
@@ -232,13 +230,11 @@ to the robot file.
 ./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-no-deploy-servo.sim
 ```
 
-No feeder on the robot? Both feed parts are `optional()` too: leave `feeder_arm` and `feeder_wheel` out of the
-robot configuration. INIT says they are off, the flywheel still spins, and RB feeds nothing. `r1-no-feeder.sim`
-checks this (`set device feeder_arm missing`, `set device feeder_wheel missing`).
+No feeder on the robot? The feeder is `optional()` too: leave `feeder_left` and `feeder_right` out of the
+robot configuration. INIT says it is off, the flywheel still spins, and RB feeds nothing. `r1-no-feeder.sim`
+checks this (`set device feeder_left missing`, `set device feeder_right missing`).
 
-The feed wheel's timing: `r1-feed-wheel.sim` (only while firing: a wheel that stops before it starts sends
-nothing; the default timing sends one POLLEN and the arm comes back) and `r1-feed-wheel-always.sim`
-(`alwaysOn = true`: two RB presses, two POLLEN).
+The feed wheels: `r1-feed-wheels.sim` (one RB, one POLLEN; both wheels run, then stop).
 
 Drive it in a browser (then open http://localhost:8780 and pick "R1 TeleOp"):
 

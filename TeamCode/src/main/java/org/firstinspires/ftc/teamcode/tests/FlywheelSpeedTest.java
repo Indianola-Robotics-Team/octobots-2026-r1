@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import java.io.File;
 import java.io.FileWriter;
@@ -23,7 +22,7 @@ import org.firstinspires.ftc.teamcode.Tunables;
  * ONE-OFF TEST (2026-11-12): is "bang-bang + feedforward" speed control better than the hub's own speed control
  * for R1's flywheel? Idea from team 16010 Astra Machina. Proposal: ftc-helper-lib docs/design/flywheel-bang-feedforward.md.
  *
- * It does NOT use Robot.java: it drives the flywheel motor, the feeder arm and the feed wheel itself, so both
+ * It does NOT use Robot.java: it drives the flywheel motor and the two feed wheels itself, so both
  * speed-control modes run on the same hardware with the same feeding rhythm.
  *
  * Set up: robot on the floor, front (ramp) toward a net. Load 4 POLLEN the normal way.
@@ -50,9 +49,7 @@ public class FlywheelSpeedTest extends LinearOpMode {
     private static final double MAX_RPM = 6000;
 
     // ---- Feeding rhythm (the same in both modes) ----
-    private static final double PUSH_SEC = 0.15;          // arm going up (torque servo: 27 deg at 0.2 s per 60 deg = 0.09 s, plus margin)
-    private static final double RETURN_SEC = 0.15;        // arm coming back
-    private static final double GAP_SEC = 0.25;           // wait after the arm is back, before the next ball (library shotIntervalSec)
+    private static final double GAP_SEC = 0.25;           // wait after the wheels stop, before the next ball (library shotIntervalSec)
     private static final int BURST = 4;
 
     // ---- BANG settings ----
@@ -67,8 +64,7 @@ public class FlywheelSpeedTest extends LinearOpMode {
     private enum Mode { HUB, BANG }
 
     private DcMotorEx flywheel;
-    private Servo feederArm;
-    private CRServo feedWheel;
+    private CRServo feedLeft, feedRight;
     private VoltageSensor battery;
     private List<LynxModule> hubs;
 
@@ -106,8 +102,9 @@ public class FlywheelSpeedTest extends LinearOpMode {
         flywheel = hardwareMap.get(DcMotorEx.class, "launcher");
         flywheel.setDirection(DcMotorSimple.Direction.REVERSE);           // Robot.java: Launcher ... .reversed()
         flywheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);  // coast: never brake a fast wheel
-        feederArm = hardwareMap.get(Servo.class, "feeder_arm");
-        feedWheel = hardwareMap.get(CRServo.class, "feeder_wheel");
+        feedLeft = hardwareMap.get(CRServo.class, "feeder_left");
+        feedRight = hardwareMap.get(CRServo.class, "feeder_right");
+        feedRight.setDirection(DcMotorSimple.Direction.REVERSE);         // Robot.java: alsoServoReversed
         battery = hardwareMap.voltageSensor.iterator().next();
 
         targetRpm = Tunables.Launcher.speedRpm;
@@ -124,8 +121,7 @@ public class FlywheelSpeedTest extends LinearOpMode {
         logFile = new File(dir, "flywheel-" + stamp + ".csv");
         log.append("t,loop_ms,mode,target_rpm,rpm,power,volts,burst,shot,event\n");
 
-        feederArm.setPosition(Tunables.FeederArm.rest);
-        feedWheel.setPower(0);
+        feed(0);
         coast();
 
         telemetry.addLine("Flywheel Speed Test: B on/off, A mode, X measure kS/kV, RB burst of 4");
@@ -176,8 +172,7 @@ public class FlywheelSpeedTest extends LinearOpMode {
         }
 
         coast();
-        feedWheel.setPower(0);
-        feederArm.setPosition(Tunables.FeederArm.rest);
+        feed(0);
         saveLog();
     }
 
@@ -285,32 +280,35 @@ public class FlywheelSpeedTest extends LinearOpMode {
         }
         int i = shotInBurst;
         double s = t - shotStart;
-        double stage = num(Tunables.FeederWheel.stageSec, 0.2);
-        double stop = num(Tunables.FeederWheel.stopSec, 0.3);
+        double feedSec = num(Tunables.Feeder.feedSec, 0.4);
         String event = "";
 
-        // Feed wheel: on from the start of the shot until "stop" seconds after the push starts.
-        feedWheel.setPower(s < stage + stop ? num(Tunables.FeederWheel.power, 1.0) : 0);
-        if (s >= stage && Double.isNaN(pushAt[i])) {
+        // Both feed wheels: on from the start of the shot for feedSec (the ball goes in during that time).
+        feed(s < feedSec ? num(Tunables.Feeder.power, 1.0) : 0);
+        if (Double.isNaN(pushAt[i])) {
             pushAt[i] = t;
             rpmAtPush[i] = rpm;
             minAfter[i] = rpm;
-            feederArm.setPosition(Tunables.FeederArm.push);
             event = "push";
         }
-        if (s >= stage + PUSH_SEC) feederArm.setPosition(Tunables.FeederArm.rest);
-        if (s >= stage + PUSH_SEC + RETURN_SEC + GAP_SEC) {
+        if (s >= feedSec + GAP_SEC) {
             shotInBurst++;
             shotStart = t;
             if (shotInBurst >= BURST) {
                 shotInBurst = -1;
-                feedWheel.setPower(0);
+                feed(0);
                 summarize();
                 saveLog();
                 return event.isEmpty() ? "burst_end" : event;
             }
         }
         return event;
+    }
+
+    /** Both feed wheels at the same power (the right one turns the other way: its direction is REVERSE). */
+    private void feed(double power) {
+        feedLeft.setPower(power);
+        feedRight.setPower(power);
     }
 
     /** After each push: the lowest speed, and when it is back within READY_RPM (for READY_HOLD_SEC). */

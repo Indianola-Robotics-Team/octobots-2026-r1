@@ -13,17 +13,15 @@ import com.crossbotics.ftchelper.teleop.LibraryButtons;
  *   robot turns to the HIVE; it turns on only with the HIVE in view; move the turn stick to turn by hand).
  *   The gamepad buzzes when the aim is close. Field-centric: hold RT, then click the right stick (not vetted yet)
  * - the intake runs once it is deployed (just after START). LB: intake on / off. Double-tap LB: push pieces
- *   out (the feed wheel turns backward too), until LB is tapped again (then it runs in).
+ *   out, until LB is tapped again (then it runs in).
  * - the flywheel spins from START and stays at speed, ready. B: switch it off / on. Off, RB still fires:
  *   the wheel spins up, fires, and switches off again
  * - RB with the HIVE in view and auto-aim off: the robot turns to it quickly, then fires (Tunables.Aim.aimOnFire;
  *   not while it sprays: SPRAY never waits)
- * - RB fires one POLLEN: the feeder wheel brings it to the feeder arm, and the arm pushes it into the wheel (it waits until the wheel is at
+ * - RB fires one POLLEN: the two feed wheels squeeze it into the flywheel (it waits until the flywheel is at
  *   speed; hold RB to keep firing until you let go). Tap RB, then press and hold it: SPRAY, as fast as it can (no wait for the
  *   speed), until you let go. The last 5 s of TeleOp spray too (Tunables.Launcher.sprayEnabled)
  * - D-pad up/down: flywheel speed +/- 50 RPM (Tunables.Launcher.stepRpm)
- * - D-pad right/left: the feeder arm pushes further / less, 0.01 a press (the screen shows the number for
- *   Tunables.FeederArm.push)
  * - X: push the intake over again (if it did not fall at START)
  * - Y, held 1/2 s: the camera's lighting test again (aim at a tag first). For a start with no tag in
  *   view. Up to 5 s, and the camera sees nothing until it is done
@@ -62,13 +60,13 @@ public class Controls extends ControlMap<Robot> {
         g1.rumbleWhenAimed();                                                   // buzz while the aim is close
         g1.rt.with(g1.rightStickButton, () -> driving().toggleFieldCentric())
                 .says("field-centric on/off (not vetted)");                     // hold RT, then click the right stick
-        g1.dpadRight.press(() -> robot.launcher.feeder().adjustPush(+1)).says("feeder arm: push further");
-        g1.dpadLeft.press(() -> robot.launcher.feeder().adjustPush(-1)).says("feeder arm: push less");
         g1.lt.slow();                                                           // LT: drive slowly while held
         g1.x.press(Actions.deployIntake(robot)).says("deploy intake").needs(robot.intakeDeploy);   // push the intake over again
         g1.y.heldFor(0.5, robot.camera::relight).rumble()
                 .says("camera: lighting test again (aim at a tag)");            // held: a bump does not blind it
         g1.a.free();                                                            // free: replace free() with a job
+        g1.dpadRight.free();                                                    // free (was the feeder arm's push trim)
+        g1.dpadLeft.free();
         g1.rightStickY.free();                                                  // free: a stick, .use(...)
     }
 

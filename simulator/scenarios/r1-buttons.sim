@@ -1,5 +1,5 @@
 # Robot 1 buttons added for meet 1: left stick click = reverse drive, hold RT + right stick click =
-# field-centric (hard to hit by accident), D-pad right/left = feeder arm push trim, tap then hold RB = SPRAY.
+# field-centric (hard to hit by accident), tap then hold RB = SPRAY.
 # Run it: from the ftc-helper-lib folder:
 #   ./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-buttons.sim
 robot ../robot.properties
@@ -27,11 +27,6 @@ release all
 expect within 1 screen has "Drive : robot"
 press g1.left_stick_button             # reverse drive off
 expect within 1 screen not "REVERSED"
-press g1.dpad_right                    # feeder arm: push further (rest 0.37, push 0.28: further = lower)
-press g1.dpad_right
-expect within 1 screen has "FeederArm push : 0.260"
-press g1.dpad_left
-expect within 1 screen has "FeederArm push : 0.270"
 press g1.right_bumper                  # tap RB, then press and hold it: SPRAY
 wait 0.1
 hold g1.right_bumper
