@@ -54,6 +54,7 @@ public class Tunables {
         public static double readyBandRpm = 100;                       // "at speed" = this close to the target (library 60: at 3450 the wheel sat near 3429 and seldom fired)
         public static double idleRpm = DEFAULT;                        // speed between shots, 0 = stop (0)
         public static double shotIntervalSec = DEFAULT;                // least time between two shots (0.25)
+        public static double shotDropRpm = DEFAULT;                    // a drop of more than this = a shot (150): misses shots = less
         public static boolean sprayEnabled = true;                     // RB tap, then press and hold: fires as fast as it can (no speed wait); also the last 5 s of TeleOp
         public static double maxFiringQueue = DEFAULT;                 // fire presses that may wait (4; 0 = no queue: a press during a shot is ignored)
         public static double kP = 40;                                  // speed control: push per speed error (goBILDA)
@@ -66,7 +67,8 @@ public class Tunables {
 
     public static class Feeder {                                       // "feeder_left" and "feeder_right" in the configuration
         public static double power = DEFAULT;                          // both wheels' power, -1 to 1 (1.0); below 0 = both turn the other way
-        public static double feedSec = DEFAULT;                        // time the wheels run per shot (0.4): two POLLEN go = less; none = more
+        public static double feedSec = DEFAULT;                        // the most time the wheels run per shot (0.4): none goes = more
+        public static boolean stopOnShot = true;                       // stop the wheels when the flywheel sees the shot (not in SPRAY)
     }
 
     public static class Webcam1 {                                      // "Webcam 1" in the configuration (the Logitech camera)
