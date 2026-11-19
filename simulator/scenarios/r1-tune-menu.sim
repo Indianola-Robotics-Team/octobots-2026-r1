@@ -7,6 +7,7 @@ expect screen has "Motor Direction Check"
 expect screen has "Encoder Check"
 expect screen has "Servo Finder"
 expect screen has "Flywheel Finder"
+expect screen has "Feed Time Finder"           # two CR servo feed wheels, no feed stop
 expect screen has "Drive Tuner"
 expect screen has "Shot Tuner"
 expect screen has "Move Tuner"

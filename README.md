@@ -34,7 +34,7 @@ STOP, then INIT, for the next one. For robot 1 it lists the **Hardware Check** (
 motor turns, the IMU), the **Motor Direction Check** (robot on a block: X = front left, Y = front right,
 A = back left, B = back right; each wheel must roll toward the launcher, with our drive's directions from
 `Robot.java`), the **Servo Finder** (the deploy servo's positions), the **Flywheel Finder** (the
-launcher's kP..kF), the **Drive Tuner** (the wheel size and the strafe correction, for the autonomous) and the **Shot Tuner** (not
+launcher's kP..kF), the **Feed Time Finder** (the feed wheels' `feedSec`, from test shots), the **Drive Tuner** (the wheel size and the strafe correction, for the autonomous) and the **Shot Tuner** (not
 used by robot 1: it shoots from one spot). They show the lines to copy into `Tunables.java` or
 `Robot.java`. No finder files of our own: the library has them all.
 The full first-time order, with what "pass" means at each step: the team pages' Part C,
@@ -93,11 +93,14 @@ deploy servo's arm, the flywheel slide, the ramp, the shot angle. Measure the ro
 3. The deploy servo's positions with **Tune and check > Servo Finder** (`Tunables.IntakeDeploy`: `stowed`,
    `deployed`). `travelSec` is the time for a full 0-to-1 move (now from the servo's catalog speed):
    keep it, or time the push and divide by `deployed - stowed`.
-4. The flywheel's numbers with **Tune and check > Flywheel Finder** (`Tunables.Launcher` kP..kF: today goBILDA's),
+4. The flywheel's numbers with **Tune and check > Flywheel Finder** (`Tunables.Launcher` kP..kF: today goBILDA's).
    Then the feed wheels (`Tunables.Feeder`). First check the direction: set `feedSec` to 2, fire with no
    POLLEN, and watch both wheels pull in. Both pull out: add `.reversed()` to the feeder in Robot.java. One
-   pulls out: change `alsoServoReversed` to `alsoServo`. Then watch shots: both wheels run `feedSec` (0.4 s) per
-   shot at `power` (1.0). Two POLLEN go at once: less `feedSec`. The POLLEN stops short: more.
+   pulls out: change `alsoServoReversed` to `alsoServo`. Put `feedSec` back to `DEFAULT`. Then
+   **Tune and check > Feed Time Finder**: LB spins the flywheel up, RB fires a test shot and times it. Fire 5 or
+   more, from every place a POLLEN can sit (the farthest back more than once). Copy its
+   `Tunables.Feeder: feedSec = ...` line. With `stopOnShot = true` the wheels stop at each shot, so `feedSec` is
+   only the time limit.
 5. The wheel size and the strafe correction with **Tune and check > Drive Tuner**, then `Tunables.Drive.calibrated = true` (until then the
    autonomous refuses to run).
 6. The shot: its real launch angle and speed (see "The autonomous programs" below), then each start spot.
