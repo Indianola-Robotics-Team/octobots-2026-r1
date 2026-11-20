@@ -85,8 +85,10 @@ public class Robot extends RobotDefinition {
                 .axis("up").lengthMm(40).reversed().note("est.");
         launcher = add(Launcher.flywheel("launcher", "gobilda-5203-6000").reversed()
                 .feeder(Indexer.crServo("feeder_left").alsoServoReversed("feeder_right").part("gobilda-2000-speed")
+                        .reversed() // Reversed
                         .tunables("Feeder").optional().looks(leftFeedWheels, rightFeedWheels))
                 .feedWheelOutWith(intake)   // the intake pushing out turns both feed wheels backward too
+                .speedFromDistance(camera)
                 .spinAtStart()   // at speed from START and between shots, ready to fire (B switches it off)
                 .looks(launcherSlide, flywheel)
                 .shotAngle(75));   // 75° up from the floor, out of the front (the planned ramp; the built one is 53°)

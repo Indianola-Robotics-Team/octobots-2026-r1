@@ -49,7 +49,8 @@ public class Tunables {
 
     /** kP and kF are goBILDA's tested numbers for this robot (from their starter code); speedRpm is ours. */
     public static class Launcher {                                     // "launcher" in the configuration
-        public static double speedRpm = 3450;                          // TeleOp and autos 2-3 shot speed (auto 1 has its own; goBILDA had 2679)
+        public static double speedRpm = 2630;                          // TeleOp and autos 2-3 shot speed (auto 1 has its own; goBILDA had 2679)
+        public static double[][] speedByDistance = {{24,2530},{36,2630},{39,2840},{46,3120},{55,3150},{73,3340}};
         public static double stepRpm = 50;                             // speed change per D-pad press (library default 100)
         public static double readyBandRpm = 100;                       // "at speed" = this close to the target (library 60: at 3450 the wheel sat near 3429 and seldom fired)
         public static double idleRpm = DEFAULT;                        // speed between shots, 0 = stop (0)
@@ -57,23 +58,23 @@ public class Tunables {
         public static double shotDropRpm = DEFAULT;                    // a drop of more than this = a shot (150): misses shots = less
         public static boolean sprayEnabled = true;                     // RB tap, then press and hold: fires as fast as it can (no speed wait); also the last 5 s of TeleOp
         public static double maxFiringQueue = DEFAULT;                 // fire presses that may wait (4; 0 = no queue: a press during a shot is ignored)
-        public static double kP = 40;                                  // speed control: push per speed error (goBILDA)
-        public static double kI = 0;                                   // speed control: not used (goBILDA)
-        public static double kD = 0;                                   // speed control: not used (goBILDA)
-        public static double kF = 12.5;                                // speed control: steady power (goBILDA)
+        public static double kP = 1.47;                                  // speed control: push per speed error (goBILDA)
+        public static double kI = 0.147;                                   // speed control: not used (goBILDA)
+        public static double kD = 14.68;                                   // speed control: not used (goBILDA)
+        public static double kF = 13.0;                                // speed control: steady power (goBILDA)
         public static double nominalVolts = DEFAULT;                   // battery volts kF was found at (12.8)
         public static boolean batteryCompensation = false;             // off until proven on a real robot
     }
 
     public static class Feeder {                                       // "feeder_left" and "feeder_right" in the configuration
         public static double power = DEFAULT;                          // both wheels' power, -1 to 1 (1.0); below 0 = both turn the other way
-        public static double feedSec = DEFAULT;                        // the most time the wheels run per shot (0.4): none goes = more
+        public static double feedSec = 1.05;                        // the most time the wheels run per shot (0.4): none goes = more
         public static boolean stopOnShot = true;                       // stop the wheels when the flywheel sees the shot (not in SPRAY)
     }
 
     public static class Webcam1 {                                      // "Webcam 1" in the configuration (the Logitech camera)
         public static boolean liveView = true;                         // its picture on the Driver Station (menu > Camera Stream, in INIT), PRACTICE only
-        public static double pitchDeg = 35;                            // tilted 35 degrees up (to see the HIVE): the aim uses the floor's angle. TODO measure the mount
+        public static double pitchDeg = 36;                            // tilted 35 degrees up (to see the HIVE): the aim uses the floor's angle. TODO measure the mount
     }
 
     public static class Aim {                                          // a fixed name: always Aim (the library's defaults for the rest)
