@@ -65,6 +65,13 @@ public class Robot extends RobotDefinition {
         intake = add(Intake.motor("intake").part("gobilda-5203-117").holds(4)
                 .looks(intakeArm, roller, leftSpinner, rightSpinner));
 
+        // The camera: a Logitech webcam on a USB port. "Webcam 1" = its name in the robot configuration.
+        // goal(...): the HIVE it looks for (our alliance's, chosen in INIT). autoExposure(): at INIT it tries a few
+        // brightness settings and keeps the one that sees the most AprilTags. The right stick click aims with it (Controls.java).
+        // It comes BEFORE the launcher: speedFromDistance(camera) needs it made first.
+        // A camera missing from the configuration is a warning at INIT, not a stop. Its numbers: Tunables.Webcam1.
+        camera = add(Camera.webcam("Webcam 1").autoExposure().goal("BLUE SCORING", "RED SCORING"));
+
         // The launcher: one 96 mm wheel, left of the middle. Shots leave up the front ramp. Robot 1 shoots POLLEN only.
         // The feeder: two CR servos (goBILDA Speed servos set to spin), one on each side of the POLLEN. Each turns
         // 48 mm Gecko wheels. They squeeze the POLLEN between them and drive it into the flywheel.
@@ -88,7 +95,7 @@ public class Robot extends RobotDefinition {
                         .reversed() // Reversed
                         .tunables("Feeder").optional().looks(leftFeedWheels, rightFeedWheels))
                 .feedWheelOutWith(intake)   // the intake pushing out turns both feed wheels backward too
-                .speedFromDistance(camera)
+                .speedFromDistance(camera)   // wheel speed from Tunables.Launcher speedByDistance and the camera's distance
                 .spinAtStart()   // at speed from START and between shots, ready to fire (B switches it off)
                 .looks(launcherSlide, flywheel)
                 .shotAngle(75));   // 75° up from the floor, out of the front (the planned ramp; the built one is 53°)
@@ -96,12 +103,6 @@ public class Robot extends RobotDefinition {
         // Parts that do not move: the tower in front of the launcher, and our ramp out of the front (est.).
         fixed(Shape.box("tower").atMm(88, 0, 40).sizeMm(48, 184, 264),
               Shape.box("ramp").atMm(180, 0, 200).sizeMm(120, 150, 10).tiltDeg(75));   // 75° up from the floor toward the front (planned; built at 53°), like the shots
-
-        // The camera: a Logitech webcam on a USB port. "Webcam 1" = its name in the robot configuration.
-        // goal(...): the HIVE it looks for (our alliance's, chosen in INIT). autoExposure(): at INIT it tries a few
-        // brightness settings and keeps the one that sees the most AprilTags. The right stick click aims with it (Controls.java).
-        // A camera missing from the configuration is a warning at INIT, not a stop. Its numbers: Tunables.Webcam1.
-        camera = add(Camera.webcam("Webcam 1").autoExposure().goal("BLUE SCORING", "RED SCORING"));
 
         // Right after START, push the intake over (the library moves nothing in INIT: its safety choice).
         atStart(() -> deployAtStart ? Actions.deployIntake(this)
