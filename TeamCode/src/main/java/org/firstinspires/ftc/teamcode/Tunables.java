@@ -60,9 +60,9 @@ public class Tunables {
         public static double maxFiringQueue = DEFAULT;                 // fire presses that may wait (4; 0 = no queue: a press during a shot is ignored)
         public static double kP = 1.47;                                  // speed control: push per speed error (goBILDA)
         public static double kI = 0.147;                                   // speed control: not used (goBILDA)
-        public static double kD = 14.68;                                   // speed control: not used (goBILDA)
-        public static double kF = 13.0;                                // speed control: steady power (goBILDA)
-        public static double nominalVolts = DEFAULT;                   // battery volts kF was found at (12.8)
+        public static double kD = 0;                                   // speed control: not used (the Flywheel Finder says kD = 0)
+        public static double kF = 14.68;                               // speed control: steady power (Flywheel Finder, top speed 4784 RPM)
+        public static double nominalVolts = 13.0;                      // battery volts kF was found at (Flywheel Finder)
         public static boolean batteryCompensation = false;             // off until proven on a real robot
     }
 
