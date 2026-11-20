@@ -28,6 +28,10 @@ public class Robot extends RobotDefinition {
     /** Push the intake over right after START? An autonomous that starts against a wall sets it false. */
     public boolean deployAtStart = true;
 
+    /** Spin the flywheel up right after START? A launching autonomous sets it true: the heavy wheel needs
+     *  seconds to reach speed, so it must not start only when the first fire step begins. */
+    public boolean spinAtStart = false;
+
     @Override
     protected void define() {
         // The drive: the Strafer's four 312 RPM motors and 104 mm GripForce mecanum wheels. Order: FL, FR, BL, BR.
@@ -105,7 +109,11 @@ public class Robot extends RobotDefinition {
               Shape.box("ramp").atMm(180, 0, 200).sizeMm(120, 150, 10).tiltDeg(67));   // the A2 hood's exit, 67° up toward the front, like the shots (est. place)
 
         // Right after START, push the intake over (the library moves nothing in INIT: its safety choice).
+        // Not now (an autonomous with its back on the wall): hold the servo at "stowed" from START. A servo with
+        // no command has no power, so it cannot hold the folded intake, and the intake fell over backward.
+        // A launching autonomous (spinAtStart) also starts the flywheel here.
         atStart(() -> deployAtStart ? Actions.deployIntake(this)
-                : Action.named("Intake stays folded (the autonomous deploys it)"));
+                : Action.named("Intake stays folded (the autonomous deploys it)")
+                        .then(() -> intakeDeploy.goTo("stowed"), () -> { if (spinAtStart) launcher.spinUp(); }));
     }
 }

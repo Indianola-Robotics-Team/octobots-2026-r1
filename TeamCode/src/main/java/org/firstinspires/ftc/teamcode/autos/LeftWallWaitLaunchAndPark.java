@@ -33,6 +33,7 @@ import org.firstinspires.ftc.teamcode.Robot;
 public class LeftWallWaitLaunchAndPark extends Auto<Robot> {
     @Override
     protected void steps(Steps s, Robot robot) {
+        robot.spinAtStart = true;      // the flywheel starts at START: at speed by the first shot
         robot.deployAtStart = false;   // the back is on the wall: the intake is pushed over while it drives away
         s.start("Back on L wall, 3rd tile, 0.6in off centre, facing HIVE", -62, -11.2, -90)
          .waitSeconds("Wait for our partner", 15)

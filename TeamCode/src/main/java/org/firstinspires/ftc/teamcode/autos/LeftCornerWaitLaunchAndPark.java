@@ -34,6 +34,7 @@ import org.firstinspires.ftc.teamcode.Robot;
 public class LeftCornerWaitLaunchAndPark extends Auto<Robot> {
     @Override
     protected void steps(Steps s, Robot robot) {
+        robot.spinAtStart = true;      // the flywheel starts at START: at speed by the first shot
         robot.deployAtStart = false;   // the back is in the corner: the intake is pushed over while it drives away
         s.start("Back corner in L corner, front at HIVE", -58.4, -58.4, -44.7)
          .waitForGoal("Wait for the tip")

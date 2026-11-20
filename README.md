@@ -130,7 +130,7 @@ and heading count from the START heading, counterclockwise too.
 
 | Program | Place the robot | Shoots | Parks |
 | --- | --- | --- | --- |
-| **R1 Right Corner: Launch, Park Right** (`RightCornerLaunchAndPark.java`) | right of centre on our wall: the **back-left corner touching our wall, 20.5 in from the right-hand wall**, turned to heading 37.8 so the **front (the ramp) points at our HIVE's up CELL** | at once, at 3750 RPM (an estimate in the auto's own lines: tune it; `speedRpm` is 3450) | the zone's right corner, facing left (it turns while it drives) |
+| **R1 Right Corner: Launch, Park Right** (`RightCornerLaunchAndPark.java`) | right of centre on our wall: the **back-left corner touching our wall, 20.5 in from the right-hand wall**, turned to heading 37.8 so the **front (the ramp) points at our HIVE's up CELL** | at once, at the shot table's speed for the camera's distance | the zone's right corner, facing left (it turns while it drives) |
 | **R1 Right Wall: Launch, Park Right** (`RightWallLaunchAndPark.java`) | **back on the right wall, the 3rd tile out from our wall, centred in it**, front facing the HIVE | at once, at the usual speed (`speedRpm`) | the zone's right corner, facing left |
 | **R1 Left Corner: Wait for Tip, Launch, Park** (`LeftCornerWaitLaunchAndPark.java`) | **in the left corner, turned so its back corner points into the field's corner** (it touches both walls), heading -44.7, **the front (the ramp) pointing at the HIVE's left CELL**. The LOADING ZONE is just to its right | when the camera sees the up CELL (after our partner tips the HIVE; no time limit), at the shot table's speed for its distance (about 64 in). No tip: no shots | 12 in out of the corner, turning to face right: its corner over the zone's left corner |
 | **R1 Left Wall: Wait, Launch, Park Left** (`LeftWallWaitLaunchAndPark.java`) | **back on the left wall, the 3rd tile out**, front facing the HIVE, **0.6 in off centre toward the field's centre line** (centred, it would overlap the FLOWER on that wall by 0.4 in) | after **15 s**, at the usual speed (`speedRpm`) | the zone's left corner, facing right |
@@ -161,8 +161,9 @@ with a partner that scores first. Two of our programs can share the zone: one pa
 side wall, the up CELL is only about 40 in away. A 65 degree shot that reaches the opening's height there
 is still going up, at any speed (the simulator: 0 of 4 from 1500 to 2275 RPM). At 75 degrees it comes down
 into it. The simulator (realistic scatter, the exit speed half the wheel's rim speed), from the start
-spots: auto 1 4 of 4 at 2500 to 2550 RPM, autos 2 and 3 4 of 4 at 2300 to 2350 RPM. Each auto fires with
-`robot.launcher.fireAllAction(rpm)`: that shot's own speed, then back to `speedRpm` (the TeleOp's).
+spots: auto 1 4 of 4 at 2500 to 2550 RPM, autos 2 and 3 4 of 4 at 2300 to 2350 RPM. Each auto now fires two, bumps, and fires
+the last two with `robot.launcher.fireAction(2)`: the speed comes from the shot table and the camera's
+distance, as in the TeleOp (`Tunables.Launcher.speedByDistance`).
 
 **Routes** (after firing; the intake is pushed over during the first move):
 - **Right Corner:** slide 9.4 in straight away from our wall (clear of our FLOWER), then 74.5 in to the
@@ -183,8 +184,8 @@ in all three. The left one first drops four POLLEN into the up CELL, to tip the 
 1. The shot: film a shot from the side next to a tape measure. Launch angle (degrees up from the
    floor) and exit speed (inches per second). Put the angle in Robot.java (`shotAngle(up)`),
    remake the robot file, and run the hit rate from each start spot (simulator page: Hit rate).
-2. Then the speeds: from each start spot, change the RPM in that auto's `fireAllAction(...)` until all four
-   go in (and `Tunables.Launcher.speedRpm` for the TeleOp).
+2. Then the speeds: the autos use the TeleOp's shot table (`Tunables.Launcher.speedByDistance`). If a
+   start spot shoots long or short, fix the table row for that distance.
 3. That the four preloads fire with the intake still folded up.
 4. The drive: the Drive Tuner (Tune and check) first (the inches are only right on a tuned robot), then
    check each end spot: at least 2 in from the wall, its corner over the LOADING ZONE. If not, open the auto

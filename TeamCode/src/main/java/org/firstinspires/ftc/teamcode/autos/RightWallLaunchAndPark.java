@@ -29,6 +29,7 @@ import org.firstinspires.ftc.teamcode.Robot;
 public class RightWallLaunchAndPark extends Auto<Robot> {
     @Override
     protected void steps(Steps s, Robot robot) {
+        robot.spinAtStart = true;      // the flywheel starts at START: at speed by the first shot
         robot.deployAtStart = false;   // the back is on the wall: the intake is pushed over while it drives away
         s.start("Back on R wall, 3rd tile, centred, facing HIVE", 62, -11.8, 90)
          .aimAtGoal("Aim at the up CELL", 2)   // the camera turns the robot to the goal (2 s at most; not seen: it goes on)
@@ -37,7 +38,7 @@ public class RightWallLaunchAndPark extends Auto<Robot> {
          // rolls the last two POLLEN forward into the feeder.
          .forward("Bump out", 2, 0.3)
          .back("Bump back", 2, 1.0)
-         .action(robot.launcher.fireAllAction(), 6)
+         .action(robot.launcher.fireAction(2), 6)   // the last two (fire all would feed 4 times: 2 empty feeds lose 2 s)
          .parkWithSeconds(10)
          .alongside(Actions.deployIntake(robot))
          .turnTo("Back to the start heading", 0, 0.5)   // the aim turned it a little: the park moves need the start heading
