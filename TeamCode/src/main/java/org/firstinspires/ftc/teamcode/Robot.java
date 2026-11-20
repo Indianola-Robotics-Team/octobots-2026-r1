@@ -98,11 +98,11 @@ public class Robot extends RobotDefinition {
                 .speedFromDistance(camera)   // wheel speed from Tunables.Launcher speedByDistance and the camera's distance
                 .spinAtStart()   // at speed from START and between shots, ready to fire (B switches it off)
                 .looks(launcherSlide, flywheel)
-                .shotAngle(75));   // 75° up from the floor, out of the front (the planned ramp; the built one is 53°)
+                .shotAngle(67));   // 67° up from the floor, out of the front: the printed A2 curved hood (octobots-2026 r1_shooter)
 
         // Parts that do not move: the tower in front of the launcher, and our ramp out of the front (est.).
         fixed(Shape.box("tower").atMm(88, 0, 40).sizeMm(48, 184, 264),
-              Shape.box("ramp").atMm(180, 0, 200).sizeMm(120, 150, 10).tiltDeg(75));   // 75° up from the floor toward the front (planned; built at 53°), like the shots
+              Shape.box("ramp").atMm(180, 0, 200).sizeMm(120, 150, 10).tiltDeg(67));   // the A2 hood's exit, 67° up toward the front, like the shots (est. place)
 
         // Right after START, push the intake over (the library moves nothing in INIT: its safety choice).
         atStart(() -> deployAtStart ? Actions.deployIntake(this)

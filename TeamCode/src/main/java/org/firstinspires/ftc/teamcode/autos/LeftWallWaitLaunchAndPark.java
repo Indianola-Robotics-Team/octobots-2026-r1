@@ -17,9 +17,10 @@ import org.firstinspires.ftc.teamcode.Robot;
  * launcher) facing the HIVE. Not quite centred: 0.6 in toward the field's centre line, so the robot clears
  * the FLOWER on this wall (centred, it would overlap it by 0.4 in).
  *
- * Route: wait 15 s, fire two from the start spot at the usual speed, bump (2 in out, fast back to the wall) so
+ * Route: wait 15 s, turn to the goal with the camera (aimAtGoal), fire two from the start spot at the usual speed, bump (2 in out, fast back to the wall) so
  * the last two roll into the feeder, fire them (Tunables.Launcher.speedRpm; 4 s + 4 s at most:
- * the wait leaves less time). Then it pushes the intake over while it drives 8 in forward (clear of the
+ * the wait leaves less time). It turns back to the start heading (turnTo 0), so the park moves go where
+ * they were measured. Then it pushes the intake over while it drives 8 in forward (clear of the
  * FLOWER), and slides to the left corner of the LOADING ZONE (no turns): only its corner is over the zone's
  * corner, which is a PARK.
  * Plain numbers, the way the auto builder writes them, so the builder can open this file ("Start from
@@ -35,14 +36,16 @@ public class LeftWallWaitLaunchAndPark extends Auto<Robot> {
         robot.deployAtStart = false;   // the back is on the wall: the intake is pushed over while it drives away
         s.start("Back on L wall, 3rd tile, 0.6in off centre, facing HIVE", -62, -11.2, -90)
          .waitSeconds("Wait for our partner", 15)
+         .aimAtGoal("Aim at the up CELL", 2)   // the camera turns the robot to the goal (2 s at most; not seen: it goes on)
          .action(robot.launcher.fireAction(2), 4)
          // Bump: the back is on the wall, so out 2 in slowly, then back to the wall fast. The quick move back
          // rolls the last two POLLEN forward into the feeder.
          .forward("Bump out", 2, 0.3)
          .back("Bump back", 2, 1.0)
-         .action(robot.launcher.fireAllAction(), 4)
+         .action(robot.launcher.fireAction(2), 4)   // the last two (fire all would feed 4 times: 2 empty feeds lose 2 s)
          .parkWithSeconds(8)
          .alongside(Actions.deployIntake(robot))
+         .turnTo("Back to the start heading", 0, 0.5)   // the aim turned it a little: the park moves need the start heading
          .forward("Off the wall", 8, 0.6)
          .move("To the LOADING ZONE", 42.3, -81, 0.6);
     }

@@ -23,7 +23,7 @@ All in `TeamCode/src/main/java/org/firstinspires/ftc/teamcode/`:
 | `Tunables.java` | every number, one section per part |
 | `Controls.java` | the buttons, and the TeleOp ("R1 TeleOp") |
 | `Actions.java` | steps that use several parts (deploy the intake); firing all is the library's `robot.launcher.fireAllAction()` |
-| `autos/` | three autonomous programs: **R1 Right Corner: Launch, Park Right**, **R1 Right Wall: Launch, Park Right**, **R1 Left Wall: Wait, Launch, Park Left** (below) |
+| `autos/` | five autonomous programs: **R1 Right Corner: Launch, Park Right**, **R1 Right Wall: Launch, Park Right**, **R1 Left Wall: Wait, Launch, Park Left**, **R1 Left Corner: Wait for Tip, Launch, Park**, **R1 Basic Move** (below) |
 
 How the library works: `ftc-helper-lib/docs/modules/robot.md`; short "how do I...?" answers:
 `ftc-helper-lib/docs/cookbook.md`.
@@ -109,10 +109,13 @@ deploy servo's arm, the flywheel slide, the ramp, the shot angle. Measure the ro
 
 ## The autonomous programs
 
-Three programs, all in `autos/`. Each fires the four preloaded POLLEN into our HIVE, then parks at a
+Five programs, all in `autos/`. The first four fire the four preloaded POLLEN into our HIVE, then park at a
 corner of our LOADING ZONE without touching a wall (LEAVE 3 + PARK 5). Same routes for RED and BLUE, each
 from its own wall (the field is turned, not mirrored). Right and left: as our drivers see them from our wall.
-Every program fires first, from its start spot, then pushes the intake over WHILE it drives away from the
+Every launch program turns to the goal with the camera first (`aimAtGoal`, 2 s at most), like the right stick
+click in TeleOp, then fires from its start spot. The aim turns the robot a few degrees, so before the park
+moves it turns back to its start heading (`turnTo(..., 0, ...)`): the moves were measured from that heading.
+Then it pushes the intake over WHILE it drives away from the
 wall (at START it would fall onto the wall: `Robot.deployAtStart = false`). The mecanum wheels slide the
 robot to the zone. PARK counts with any part of the robot over the zone's tape, so each one ends BESIDE
 the zone, only its corner over the zone's corner: the zone stays free for our partner.
@@ -129,7 +132,26 @@ and heading count from the START heading, counterclockwise too.
 | --- | --- | --- | --- |
 | **R1 Right Corner: Launch, Park Right** (`RightCornerLaunchAndPark.java`) | right of centre on our wall: the **back-left corner touching our wall, 20.5 in from the right-hand wall**, turned to heading 37.8 so the **front (the ramp) points at our HIVE's up CELL** | at once, at 3750 RPM (an estimate in the auto's own lines: tune it; `speedRpm` is 3450) | the zone's right corner, facing left (it turns while it drives) |
 | **R1 Right Wall: Launch, Park Right** (`RightWallLaunchAndPark.java`) | **back on the right wall, the 3rd tile out from our wall, centred in it**, front facing the HIVE | at once, at the usual speed (`speedRpm`) | the zone's right corner, facing left |
+| **R1 Left Corner: Wait for Tip, Launch, Park** (`LeftCornerWaitLaunchAndPark.java`) | **in the left corner, turned so its back corner points into the field's corner** (it touches both walls), heading -44.7, **the front (the ramp) pointing at the HIVE's left CELL**. The LOADING ZONE is just to its right | when the camera sees the up CELL (after our partner tips the HIVE; no time limit), at the shot table's speed for its distance (about 64 in). No tip: no shots | 12 in out of the corner, turning to face right: its corner over the zone's left corner |
 | **R1 Left Wall: Wait, Launch, Park Left** (`LeftWallWaitLaunchAndPark.java`) | **back on the left wall, the 3rd tile out**, front facing the HIVE, **0.6 in off centre toward the field's centre line** (centred, it would overlap the FLOWER on that wall by 0.4 in) | after **15 s**, at the usual speed (`speedRpm`) | the zone's left corner, facing right |
+
+**R1 Basic Move** (`BasicMove.java`): no shots. For a match where we only need to get out of our partner's
+way, or into the park area. In INIT, choose with the D-pad (up/down = the line, left/right = change it):
+
+- **Start delay:** 0 to 25 s, the wait after START.
+- **Distance (in):** 0 to 96, in 6 in steps (24 at the start).
+- **Direction (deg):** the way to drive, from the robot's front: **0 = forward, 90 = LEFT, -90 = RIGHT,
+  180 = back**, and the 45s between them. The INIT screen shows this reminder too. The robot does not turn.
+
+Place the robot so that the one straight line takes it where it must go. Measure the line on the field first.
+`simulator/scenarios/r1-basic-move.sim` checks it.
+
+**Why the left corner one waits for the camera:** from the left, the CELL that faces us is the DOWN one
+until the HIVE tips. Its tags then read upside down, so the camera does not take it as the goal. When our
+partner's shots tip the HIVE, the tags read right side up, the camera sees the goal, and the robot aims and
+fires. It keeps the last 4 s for the park (`parkWithSeconds(4)`): a late tip cuts the shots short, not the
+park. `r1-auto-left-corner.sim` (tip after 4 s: all four fired, parked) and `r1-auto-left-corner-no-tip.sim`
+(no tip: no shots, still parked) check it.
 
 **Why the left one waits:** from the left, the HIVE's CELL on our side is the DOWN one at the start. Our
 partner's shots from the right tip the HIVE; then the CELL on the left is up and open to us. Run it only

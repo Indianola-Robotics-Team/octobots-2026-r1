@@ -1,0 +1,27 @@
+# Robot 1's basic move (autos/BasicMove.java): in INIT the drivers choose a start delay, a distance and a
+# direction (90 = left, -90 = right, from the robot's front); after START it waits, drives that line, and stops.
+# Run it: from the ftc-helper-lib folder:
+#   ./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-basic-move.sim
+robot ../robot.properties
+init "R1 Basic Move"
+expect screen has "Distance (in): 24"              # the starting choices
+expect screen has "Direction (deg): 0 forward"
+expect screen has "90 = LEFT, -90 = RIGHT"        # the reminder while they choose
+press g1.dpad_down                                 # Start delay
+press g1.dpad_right
+press g1.dpad_right                                # 2 s
+press g1.dpad_down                                 # Distance: stays 24
+press g1.dpad_down                                 # Direction
+press g1.dpad_left
+press g1.dpad_left                                 # 0 forward -> -45 -> -90 right
+expect screen has "Direction (deg): -90 right"
+expect screen has "Start delay: 2 s"
+start
+wait 1.5
+expect robot x > 55                                # still waiting (the start delay)
+expect within 6 screen has "Move 24 in at -90 deg: done"
+expect robot x < 36                                # the robot faces down the field (heading 180): its right is -x
+expect robot x > 28
+expect robot y > 58                                # a straight line to the side: no drift forward or back
+stop
+expect error none
