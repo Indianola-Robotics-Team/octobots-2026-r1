@@ -80,5 +80,6 @@ public class Tunables {
     public static class Aim {                                          // a fixed name: always Aim (the library's defaults for the rest)
         public static boolean aimOnFire = true;                        // RB with the HIVE in view: turn to it, then fire
         public static double aimOnFireSec = 0.5;                       // the most RB waits for that turn before it fires anyway
+        public static double aimDriveSpeed = 0.5;                      // aim mode (right stick click): drive and strafe at this share of full speed (1 = full)
     }
 }
