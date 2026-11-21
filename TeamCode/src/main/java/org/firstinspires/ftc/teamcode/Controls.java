@@ -24,7 +24,8 @@ import com.crossbotics.ftchelper.tuning.Tunable;
  *   speed), until you let go. The last 5 s of TeleOp spray too (Tunables.Launcher.sprayEnabled)
  * - D-pad up/down: flywheel speed +/- 50 RPM (Tunables.Launcher.stepRpm)
  * - D-pad left/right: aim bias 0.5 degrees more left / right a press (Tunables.Aim.cameraOffset; for shots that
- *   land to one side). It lasts until the robot app restarts, autos too. To keep it, write the number in Tunables.java
+ *   land to one side). Each press is saved on the hub: it stays after a restart (a battery swap), autos too.
+ *   INIT shows it under "Tuned on this robot". Write it in Tunables.java when it is right
  * - A: angle aim on/off. On (from START: Tunables.Aim.angleAim): from an angle, the aim turns a few degrees
  *   toward the front of the CELL, where its opening is (more up close). Straight on, no change
  * - X: push the intake over again (if it did not fall at START)
@@ -55,6 +56,8 @@ public class Controls extends ControlMap<Robot> {
 
     @Override
     protected void buttons(Robot robot, Pad g1, Pad g2) {
+        biasSaveFailed = false;
+        robot.everyLoop(() -> { if (biasSaveFailed) robot.show("Aim bias", "NOT SAVED: it is lost at a restart. Write it in Tunables.Aim.cameraOffset"); });
         robot.launcher.fireOn(g1.rb);                                          // tap: one; hold: keep firing; tap, then hold: spray
         robot.launcher.speedOn(g1.dpadUp, g1.dpadDown);                        // D-pad up / down: flywheel speed, 50 RPM a tap
         g1.lb.tapOrDoubleTap(() -> {                                            // intake: tap on/off, double-tap out
@@ -86,7 +89,12 @@ public class Controls extends ControlMap<Robot> {
             if (!t.name().equals("Aim/cameraOffset")) continue;
             if (direction > 0) t.increase(); else t.decrease();
         }
+        // Saved on the hub in the background (the loop does not wait; two quick presses: the last one is saved).
+        Tunable.saveAllInBackground(ok -> biasSaveFailed = !ok);
     }
+
+    // Set by the background save: true = the last aim bias was NOT saved (it is lost at a restart).
+    private static volatile boolean biasSaveFailed = false;
 
     // Seconds LEFT when both gamepads buzz: 1:00, 1:40 and 1:59 into the 2:00 TeleOp.
     @Override

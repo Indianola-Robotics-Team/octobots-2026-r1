@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.crossbotics.ftchelper.core.Time;
 import com.crossbotics.ftchelper.launcher.Flywheel;
+import com.crossbotics.ftchelper.launcher.Launcher.ShotMode;
 import com.crossbotics.ftchelper.robot.ControlMap;
 import com.crossbotics.ftchelper.robot.Pad;
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ import java.util.Locale;
  * - RB: fire one ball (it waits for READY, like TeleOp). Point the robot away from the HIVE: it may turn to it.
  * - A: clear the numbers (start a new measurement, e.g. after a speed change).
  * Run it on the battery you will use in the match: the numbers change with the battery.
+ * It never SPRAYS: every RB is one CAREFUL shot after READY, also in the last seconds of the 2:00 timer
+ * and after it. No time buzzes either.
  */
 @TeleOp(name = "R1 Wobble Tuner", group = "Tune")
 public class WobbleTuner extends ControlMap<Robot> {
@@ -54,6 +57,7 @@ public class WobbleTuner extends ControlMap<Robot> {
     protected void buttons(Robot robot, Pad g1, Pad g2) {
         speed = rpmAt(36);
         robot.launcher.useSpeed(speed);
+        robot.launcher.shotMode(ShotMode.CAREFUL);   // never SPRAY, not even at the end of the 2:00 timer
         g1.b.toggle(robot.launcher).says("flywheel on/off");
         g1.dpadUp.press(() -> setSpeed(robot, speed + 50)).says("speed +50 RPM");
         g1.dpadDown.press(() -> setSpeed(robot, speed - 50)).says("speed -50 RPM");
@@ -61,6 +65,12 @@ public class WobbleTuner extends ControlMap<Robot> {
         g1.a.press(this::clear).says("clear the numbers");
         clear();
         robot.everyLoop(() -> measure(robot));
+    }
+
+    // A tuner has no match: no time buzzes.
+    @Override
+    protected double[] buzzAtSecondsLeft() {
+        return new double[0];
     }
 
     // One ball, and only when nothing is on its way or being measured: one shot = one set of numbers.
