@@ -1,0 +1,15 @@
+# Robot 1: TeleOp shows the aim bias (Tunables.Aim.cameraOffset) all the time, and D-pad left / right change it.
+# Run it: from the ftc-helper-lib folder:
+#   ./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-aim-bias.sim
+robot ../robot.properties
+init "R1 TeleOp"
+set pose 56 40 -180
+start
+wait 1
+expect screen has "Aim bias : +0.0 deg (+ = right"
+press g1.dpad_left                     # 0.5 deg more left
+expect within 1 screen has "Aim bias : -0.5 deg"
+press g1.dpad_left
+expect within 1 screen has "Aim bias : -1.0 deg"
+press g1.dpad_right                    # back 0.5 to the right
+expect within 1 screen has "Aim bias : -0.5 deg"

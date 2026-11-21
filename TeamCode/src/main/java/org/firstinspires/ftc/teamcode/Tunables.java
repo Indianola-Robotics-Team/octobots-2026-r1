@@ -65,7 +65,7 @@ public class Tunables {
         public static double kP = 10;                                    // speed control: push per speed error (10 = the SDK default and last year's; the Finder's 1.47 was too weak: slow to speed and slow to recover after a shot)
         public static double kI = 0;                                   // speed control: 0 (was 0.147): during the long spin-up it built up and pushed the wheel to about 3500 (aim 2600)
         public static double kD = 0;                                   // speed control: not used (the Flywheel Finder says kD = 0)
-        public static double kF = 14.68;                               // speed control: steady power (Flywheel Finder). With kI 0 this alone sets the steady speed: settles ABOVE the target = lower it, BELOW = raise it
+        public static double kF = 12.08;                               // speed control: steady power (2-weight wheel, 2026-11-21: Wobble Tuner avg +16 at 2630, +27 at 2530; 12.28 sat +55). With kI 0 this alone sets the steady speed: settles ABOVE the target = lower it, BELOW = raise it
         public static double nominalVolts = 13.0;                      // battery volts kF was found at (Flywheel Finder)
         public static boolean batteryCompensation = true;              // on: with kI 0, kF alone holds the speed, and kF's push changes with the battery (about 120 RPM a volt). Scales kF by nominalVolts / volts. Check READY on a full and a 12.2 V battery
     }

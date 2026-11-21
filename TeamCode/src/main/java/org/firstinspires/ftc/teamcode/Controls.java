@@ -57,7 +57,10 @@ public class Controls extends ControlMap<Robot> {
     @Override
     protected void buttons(Robot robot, Pad g1, Pad g2) {
         biasSaveFailed = false;
-        robot.everyLoop(() -> { if (biasSaveFailed) robot.show("Aim bias", "NOT SAVED: it is lost at a restart. Write it in Tunables.Aim.cameraOffset"); });
+        // The aim bias now, every loop (D-pad left / right change it): the driver sees what the aim adds.
+        robot.everyLoop(() -> robot.show("Aim bias", biasSaveFailed
+                ? String.format(java.util.Locale.US, "%+.1f deg NOT SAVED: it is lost at a restart. Write it in Tunables.Aim.cameraOffset", aimBiasNow())
+                : String.format(java.util.Locale.US, "%+.1f deg (+ = right; D-pad left / right)", aimBiasNow())));
         robot.launcher.fireOn(g1.rb);                                          // tap: one; hold: keep firing; tap, then hold: spray
         robot.launcher.speedOn(g1.dpadUp, g1.dpadDown);                        // D-pad up / down: flywheel speed, 50 RPM a tap
         g1.lb.tapOrDoubleTap(() -> {                                            // intake: tap on/off, double-tap out
@@ -91,6 +94,12 @@ public class Controls extends ControlMap<Robot> {
         }
         // Saved on the hub in the background (the loop does not wait; two quick presses: the last one is saved).
         Tunable.saveAllInBackground(ok -> biasSaveFailed = !ok);
+    }
+
+    // The aim bias in use now (Tunables.Aim.cameraOffset, with any change from the D-pad or the tuning menu).
+    private static double aimBiasNow() {
+        for (Tunable t : Tunable.all()) if (t.name().equals("Aim/cameraOffset")) return t.get();
+        return Tunables.Aim.cameraOffset;
     }
 
     // Set by the background save: true = the last aim bias was NOT saved (it is lost at a restart).
