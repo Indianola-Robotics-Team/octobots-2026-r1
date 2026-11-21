@@ -17,9 +17,9 @@ import org.firstinspires.ftc.teamcode.Robot;
  * launcher) facing the HIVE. Not quite centred: 0.6 in toward the field's centre line, so the robot clears
  * the FLOWER on this wall (centred, it would overlap it by 0.4 in).
  *
- * Route: wait 15 s, turn to the goal with the camera (aimAtGoal), fire two from the start spot at the usual speed, bump (2 in out, fast back to the wall) so
- * the last two roll into the feeder, fire them (Tunables.Launcher.speedRpm; 4 s + 4 s at most:
- * the wait leaves less time). It turns back to the start heading (turnTo 0), so the park moves go where
+ * Route: wait 15 s, then for each shot: aim (aimAtGoal), wait for a steady wheel, fire one (the speed from the shot
+ * table and the camera's distance). After two: one bump (3 in out fast, back slowly) so the last two roll into the
+ * feeder, then two more; then more tries until parkWithSeconds(6) cuts them (the wait leaves 9 s for the shots). It turns back to the start heading (turnTo 0), so the park moves go where
  * they were measured. Then it pushes the intake over while it drives 8 in forward (clear of the
  * FLOWER), and slides to the left corner of the LOADING ZONE (no turns): only its corner is over the zone's
  * corner, which is a PARK.
@@ -42,15 +42,28 @@ public class LeftWallWaitLaunchAndPark extends Auto<Robot> {
          .aimAtGoal("Aim at the up CELL", 2)   // the camera turns the robot to the goal (2 s at most; not seen: it goes on)
          .action(Actions.steadyWheel(robot, STEADY_SEC), 4)   // the wheel at a steady speed first (not still speeding up)
          .action(robot.launcher.fireAction(1), 3)
-         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)   // the wheel at a steady speed first (not still speeding up)
+         .aimAtGoal("Aim", 1)   // aimed already: done at once; turned (a bump, a push): turn back to the goal
+         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)
          .action(robot.launcher.fireAction(1), 3)
-         // Bump: the back is on the wall, so out 2 in slowly, then back to the wall fast. The quick move back
-         // rolls the last two POLLEN forward into the feeder.
-         .forward("Bump out", 2, 0.3)
-         .back("Bump back", 2, 1.0)
-         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)   // the wheel at a steady speed first (not still speeding up)
-         .action(robot.launcher.fireAction(1), 3)   // the last two, one at a time
-         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)   // the wheel at a steady speed first (not still speeding up)
+         // Bump (once here: after the 15 s wait, time is short): out 3 in FAST, then back SLOWLY. The sudden stop at the end of the fast move throws
+         // the loose POLLEN forward into the feeder (they keep moving when the robot stops). A fast move
+         // BACK would throw them backward, away from the feeder. Back 3.5 in, not 3: the last half inch pushes it
+         // square on the wall again (the fast move overshoots a little).
+         .forward("Bump out", 3, 1.0)
+         .back("Bump back", 3.5, 0.3)
+         .aimAtGoal("Aim", 1)   // aimed already: done at once; turned (a bump, a push): turn back to the goal
+         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)
+         .action(robot.launcher.fireAction(1), 3)
+         .aimAtGoal("Aim", 1)   // aimed already: done at once; turned (a bump, a push): turn back to the goal
+         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)
+         .action(robot.launcher.fireAction(1), 3)
+         // More tries until the park time (parkWithSeconds cuts what is left): a POLLEN that did not go yet
+         // gets two more shots (no bump here: the park time could cut a bump in half and shift the park).
+         .aimAtGoal("Aim", 1)   // aimed already: done at once; turned (a bump, a push): turn back to the goal
+         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)
+         .action(robot.launcher.fireAction(1), 3)
+         .aimAtGoal("Aim", 1)   // aimed already: done at once; turned (a bump, a push): turn back to the goal
+         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)
          .action(robot.launcher.fireAction(1), 3)
          .parkWithSeconds(6)   // the park takes about 4 s: 6 leaves time for the 4 slower, steadier shots
          .alongside(Actions.deployIntake(robot))

@@ -53,17 +53,21 @@ public class Tunables {
         public static double[][] speedByDistance = {{24,2530},{36,2630},{39,2840},{46,3120},{55,3150},{73,3340}};
         public static double stepRpm = 50;                             // speed change per D-pad press (library default 100)
         public static double readyBandRpm = 100;                       // "at speed" = this close to the target (library 60: at 3450 the wheel sat near 3429 and seldom fired)
+        public static double distanceSmoothSec = 0.3;                  // ease the speed into each new camera distance (0 = off): its wobble no longer restarts READY
+        public static boolean lockSpeedWhileFiring = true;            // a shot that waits keeps its speed (the camera's distance cannot move it)
         public static double idleRpm = DEFAULT;                        // speed between shots, 0 = stop (0)
         public static double shotIntervalSec = DEFAULT;                // least time between two shots (0.25)
-        public static double shotDropRpm = DEFAULT;                    // a drop of more than this = a shot (150): misses shots = less
+        public static double shotDropRpm = DEFAULT;                    // a drop of more than this below the target = a shot (150). A ball takes only ~70 off the weighted wheel: not seen, so each feed runs feedSec. Change it only if the R1 Wobble Tuner's Suggest line gives a number
         public static boolean sprayEnabled = true;                     // RB tap, then press and hold: fires as fast as it can (no speed wait); also the last 5 s of TeleOp
         public static double maxFiringQueue = DEFAULT;                 // fire presses that may wait (4; 0 = no queue: a press during a shot is ignored)
-        public static double kP = 1.47;                                  // speed control: push per speed error (goBILDA)
-        public static double kI = 0.147;                                   // speed control: not used (goBILDA)
+        public static double ejectRpm = 600;                           // Y double-tap: the low speed that pushes one POLLEN out of the robot (library 600). Tune: just clears the robot
+        public static double ejectFeedSec = 0.6;                       // Y double-tap: the feed wheels run only this long, so one POLLEN goes out (feedSec is 1.05). Tune: 2 come out = less, none = more
+        public static double kP = 10;                                    // speed control: push per speed error (10 = the SDK default and last year's; the Finder's 1.47 was too weak: slow to speed and slow to recover after a shot)
+        public static double kI = 0;                                   // speed control: 0 (was 0.147): during the long spin-up it built up and pushed the wheel to about 3500 (aim 2600)
         public static double kD = 0;                                   // speed control: not used (the Flywheel Finder says kD = 0)
-        public static double kF = 14.68;                               // speed control: steady power (Flywheel Finder, top speed 4784 RPM)
+        public static double kF = 14.68;                               // speed control: steady power (Flywheel Finder). With kI 0 this alone sets the steady speed: settles ABOVE the target = lower it, BELOW = raise it
         public static double nominalVolts = 13.0;                      // battery volts kF was found at (Flywheel Finder)
-        public static boolean batteryCompensation = false;             // off until proven on a real robot
+        public static boolean batteryCompensation = true;              // on: with kI 0, kF alone holds the speed, and kF's push changes with the battery (about 120 RPM a volt). Scales kF by nominalVolts / volts. Check READY on a full and a 12.2 V battery
     }
 
     public static class Feeder {                                       // "feeder_left" and "feeder_right" in the configuration
@@ -81,5 +85,9 @@ public class Tunables {
         public static boolean aimOnFire = true;                        // RB with the HIVE in view: turn to it, then fire
         public static double aimOnFireSec = 0.5;                       // the most RB waits for that turn before it fires anyway
         public static double aimDriveSpeed = 0.5;                      // aim mode (right stick click): drive and strafe at this share of full speed (1 = full)
+        public static double toleranceDeg = 1.5;                       // aimed = within this many degrees (library 2): the CELL leaves less room from an angle
+        public static boolean angleAim = false;                        // aim into the CELL's opening, not at its tags. OFF until tested on the robot (A in TeleOp turns it on to try; then set true here)
+        public static double goalFrontIn = 3;                          // the opening is this far in front of the tags under it (from the field CAD)
+        public static double cameraOffset = 0;                         // aim bias, degrees: + = the robot points more RIGHT. D-pad left/right change it 0.5 a press
     }
 }

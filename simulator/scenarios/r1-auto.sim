@@ -22,7 +22,7 @@ start
 expect within 1 shape intake_arm = 85 0.1  # still folded: it would fall onto the wall here
 expect within 12 launched >= 4             # all four fired
 expect stored = 0
-expect within 6 shape intake_arm = 220 0.1    # pushed over while it drives off the wall
+expect within 20 shape intake_arm = 220 0.1   # pushed over during the park (after the extra tries; the ball takes only 3% of the wheel speed, so feeds run their full time)
 expect within 20 screen has "To the LOADING ZONE"   # the last step is running...
 expect time < 25                           # ...well inside the 30 s (seconds since START)
 expect within 5 phase STOPPED              # and the autonomous ends by itself

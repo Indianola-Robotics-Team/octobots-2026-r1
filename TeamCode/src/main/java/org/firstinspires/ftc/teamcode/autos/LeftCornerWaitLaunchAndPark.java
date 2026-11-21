@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.Robot;
  * left CELL (heading -44.7). The LOADING ZONE is just to the right.
  *
  * Route: wait for the goal (no time limit: until the park time), turn to it with the camera, fire two (the
- * speed from the shot table and the camera's distance, about 64 in), bump (2 in out, fast back into the
+ * speed from the shot table and the camera's distance, about 64 in), bump twice (3 in out fast, back slowly into the
  * corner) so the last two roll into the feeder, fire them. parkWithSeconds(4): the last 4 s are for the park,
  * so a late tip still leaves time to park (the shots are cut short instead). Then it pushes the intake over
  * while it drives 12 in out of the corner, turning to face right: only its corner is over the zone's corner,
@@ -43,15 +43,30 @@ public class LeftCornerWaitLaunchAndPark extends Auto<Robot> {
          .aimAtGoal("Aim at the up CELL", 2)
          .action(Actions.steadyWheel(robot, STEADY_SEC), 4)   // the wheel at a steady speed first (not still speeding up)
          .action(robot.launcher.fireAction(1), 3)
-         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)   // the wheel at a steady speed first (not still speeding up)
+         .aimAtGoal("Aim", 1)   // aimed already: done at once; turned (a bump, a push): turn back to the goal
+         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)
          .action(robot.launcher.fireAction(1), 3)
-         // Bump: the back is in the corner, so out 2 in slowly, then back fast. The quick move back
-         // rolls the last two POLLEN forward into the feeder.
-         .forward("Bump out", 2, 0.3)
-         .back("Bump back", 2, 1.0)
-         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)   // the wheel at a steady speed first (not still speeding up)
-         .action(robot.launcher.fireAction(1), 3)   // the last two, one at a time
-         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)   // the wheel at a steady speed first (not still speeding up)
+         // Bump, twice: out 3 in FAST, then back SLOWLY. The sudden stop at the end of the fast move throws
+         // the loose POLLEN forward into the feeder (they keep moving when the robot stops). A fast move
+         // BACK would throw them backward, away from the feeder. Back 3.5 in, not 3: the last half inch pushes it
+         // square on the wall again (the fast move overshoots a little).
+         .forward("Bump out", 3, 1.0)
+         .back("Bump back", 3.5, 0.3)
+         .forward("Bump out again", 3, 1.0)
+         .back("Bump back again", 3.5, 0.3)
+         .aimAtGoal("Aim", 1)   // aimed already: done at once; turned (a bump, a push): turn back to the goal
+         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)
+         .action(robot.launcher.fireAction(1), 3)
+         .aimAtGoal("Aim", 1)   // aimed already: done at once; turned (a bump, a push): turn back to the goal
+         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)
+         .action(robot.launcher.fireAction(1), 3)
+         // More tries until the park time (parkWithSeconds cuts what is left): a POLLEN that did not go yet
+         // gets two more shots (no bump here: the park time could cut a bump in half and shift the park).
+         .aimAtGoal("Aim", 1)   // aimed already: done at once; turned (a bump, a push): turn back to the goal
+         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)
+         .action(robot.launcher.fireAction(1), 3)
+         .aimAtGoal("Aim", 1)   // aimed already: done at once; turned (a bump, a push): turn back to the goal
+         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)
          .action(robot.launcher.fireAction(1), 3)
          .parkWithSeconds(4)
          .alongside(Actions.deployIntake(robot))

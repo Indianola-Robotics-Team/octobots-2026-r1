@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.crossbotics.ftchelper.robot.ControlMap;
 import com.crossbotics.ftchelper.robot.Pad;
 import com.crossbotics.ftchelper.teleop.LibraryButtons;
+import com.crossbotics.ftchelper.tuning.Tunable;
 
 /**
  * Robot 1, version 1 (file 3 of 5): the BUTTONS, and the TeleOp. Like goBILDA's code, one driver does
@@ -22,7 +23,13 @@ import com.crossbotics.ftchelper.teleop.LibraryButtons;
  *   speed; hold RB to keep firing until you let go). Tap RB, then press and hold it: SPRAY, as fast as it can (no wait for the
  *   speed), until you let go. The last 5 s of TeleOp spray too (Tunables.Launcher.sprayEnabled)
  * - D-pad up/down: flywheel speed +/- 50 RPM (Tunables.Launcher.stepRpm)
+ * - D-pad left/right: aim bias 0.5 degrees more left / right a press (Tunables.Aim.cameraOffset; for shots that
+ *   land to one side). It lasts until the robot app restarts, autos too. To keep it, write the number in Tunables.java
+ * - A: angle aim on/off. On (from START: Tunables.Aim.angleAim): from an angle, the aim turns a few degrees
+ *   toward the front of the CELL, where its opening is (more up close). Straight on, no change
  * - X: push the intake over again (if it did not fall at START)
+ * - Y, double-tap: eject one POLLEN out of the launcher at a low speed (Tunables.Launcher.ejectRpm): out of the robot, not a
+ *   shot. The wheel slows down first (up to 3 s), then goes back to what it did
  * - Y, held 1/2 s: the camera's lighting test again (aim at a tag first). For a start with no tag in
  *   view. Up to 5 s, and the camera sees nothing until it is done
  * - both gamepads buzz at 1:00, 1:40 and 1:59 of TeleOp (1:00, 0:20 and 0:01 left)
@@ -64,10 +71,21 @@ public class Controls extends ControlMap<Robot> {
         g1.x.press(Actions.deployIntake(robot)).says("deploy intake").needs(robot.intakeDeploy);   // push the intake over again
         g1.y.heldFor(0.5, robot.camera::relight).rumble()
                 .says("camera: lighting test again (aim at a tag)");            // held: a bump does not blind it
-        g1.a.free();                                                            // free: replace free() with a job
-        g1.dpadRight.free();                                                    // free (was the feeder arm's push trim)
-        g1.dpadLeft.free();
+        g1.y.doubleTap(robot.launcher.ejectAction()).says("eject one POLLEN, slowly (not a shot)");   // double-tap: a hold let go early must not eject
+        g1.a.toggle(robot.aim().angleAimMode()).rumble().says("angle aim on/off (aim into the CELL's opening)");   // 2 buzzes = on
+        g1.dpadLeft.press(() -> aimBias(-1)).rumble().says("aim bias: 0.5 deg more LEFT");    // shots land right: press left
+        g1.dpadRight.press(() -> aimBias(+1)).rumble().says("aim bias: 0.5 deg more RIGHT");
         g1.rightStickY.free();                                                  // free: a stick, .use(...)
+    }
+
+    // The aim bias (Tunables.Aim.cameraOffset, live, 0.5 a step): -1 = aim more left, +1 = more right.
+    // The aim turns until the goal sits cameraOffset degrees off in the picture (+ = to the left), so a
+    // bigger number points the robot more to the RIGHT. The tuning menu shows and saves the same number.
+    private static void aimBias(int direction) {
+        for (Tunable t : Tunable.all()) {
+            if (!t.name().equals("Aim/cameraOffset")) continue;
+            if (direction > 0) t.increase(); else t.decrease();
+        }
     }
 
     // Seconds LEFT when both gamepads buzz: 1:00, 1:40 and 1:59 into the 2:00 TeleOp.

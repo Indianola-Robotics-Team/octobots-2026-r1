@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.Robot;
  * corner on our wall, 20.5 in from the right-hand wall, the front (the ramp) aimed at the HIVE's up CELL
  * (heading 37.8). The up CELL's opening faces the audience side, so the shots come down into it.
  *
- * Route: turn to the goal with the camera (aimAtGoal), fire two from the start spot (the speed from the shot table and the camera's distance), bump (2 in out, fast back to the wall)
+ * Route: turn to the goal with the camera (aimAtGoal), fire two from the start spot (the speed from the shot table and the camera's distance), bump twice (3 in out fast, back slowly)
  * so the last two roll into the feeder, fire them. Then it turns back to the start heading (turnTo 0), so the
  * park moves go where they were measured. The intake stays folded
  * until then: at START it would fall onto the wall (Robot.deployAtStart). Then it pushes the intake over
@@ -38,16 +38,31 @@ public class RightCornerLaunchAndPark extends Auto<Robot> {
         s.start("Back corner on wall 20.5in from R, front at HIVE", 51.6, -58.5, 37.8)
          .aimAtGoal("Aim at the up CELL", 2)   // the camera turns the robot to the goal (2 s at most; not seen: it goes on)
          .action(Actions.steadyWheel(robot, STEADY_SEC), 4)   // the wheel at a steady speed first (not still speeding up)
-         .action(robot.launcher.fireAction(1), 3)   // the speed from the shot table and the camera's distance
-         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)   // the wheel at a steady speed first (not still speeding up)
          .action(robot.launcher.fireAction(1), 3)
-         // Bump: the back is on the wall, so out 2 in slowly, then back to the wall fast. The quick move back
-         // rolls the last two POLLEN forward into the feeder.
-         .forward("Bump out", 2, 0.3)
-         .back("Bump back", 2, 1.0)
-         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)   // the wheel at a steady speed first (not still speeding up)
-         .action(robot.launcher.fireAction(1), 3)   // the last two, one at a time
-         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)   // the wheel at a steady speed first (not still speeding up)
+         .aimAtGoal("Aim", 1)   // aimed already: done at once; turned (a bump, a push): turn back to the goal
+         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)
+         .action(robot.launcher.fireAction(1), 3)
+         // Bump, twice: out 3 in FAST, then back SLOWLY. The sudden stop at the end of the fast move throws
+         // the loose POLLEN forward into the feeder (they keep moving when the robot stops). A fast move
+         // BACK would throw them backward, away from the feeder. Back 3.5 in, not 3: the last half inch pushes it
+         // square on the wall again (the fast move overshoots a little).
+         .forward("Bump out", 3, 1.0)
+         .back("Bump back", 3.5, 0.3)
+         .forward("Bump out again", 3, 1.0)
+         .back("Bump back again", 3.5, 0.3)
+         .aimAtGoal("Aim", 1)   // aimed already: done at once; turned (a bump, a push): turn back to the goal
+         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)
+         .action(robot.launcher.fireAction(1), 3)
+         .aimAtGoal("Aim", 1)   // aimed already: done at once; turned (a bump, a push): turn back to the goal
+         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)
+         .action(robot.launcher.fireAction(1), 3)
+         // More tries until the park time (parkWithSeconds cuts what is left): a POLLEN that did not go yet
+         // gets two more shots (no bump here: the park time could cut a bump in half and shift the park).
+         .aimAtGoal("Aim", 1)   // aimed already: done at once; turned (a bump, a push): turn back to the goal
+         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)
+         .action(robot.launcher.fireAction(1), 3)
+         .aimAtGoal("Aim", 1)   // aimed already: done at once; turned (a bump, a push): turn back to the goal
+         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)
          .action(robot.launcher.fireAction(1), 3)
          .parkWithSeconds(10)
          .alongside(Actions.deployIntake(robot))
