@@ -50,14 +50,14 @@ public class Tunables {
     /** kP and kF are goBILDA's tested numbers for this robot (from their starter code); speedRpm is ours. */
     public static class Launcher {                                     // "launcher" in the configuration
         public static double speedRpm = 2630;                          // TeleOp and autos 2-3 shot speed (auto 1 has its own; goBILDA had 2679)
-        public static double[][] speedByDistance = {{24,2530},{36,2630},{39,2840},{46,3120},{55,3150},{73,3340}};
+        public static double[][] speedByDistance = {{27,2500},{32,2600},{38,2680},{45,2960},{50,3075},{73,3340}};
         public static double stepRpm = 50;                             // speed change per D-pad press (library default 100)
         public static double readyBandRpm = 100;                       // "at speed" = this close to the target (library 60: at 3450 the wheel sat near 3429 and seldom fired)
         public static double distanceSmoothSec = 0.3;                  // ease the speed into each new camera distance (0 = off): its wobble no longer restarts READY
         public static boolean lockSpeedWhileFiring = true;            // a shot that waits keeps its speed (the camera's distance cannot move it)
         public static double idleRpm = DEFAULT;                        // speed between shots, 0 = stop (0)
         public static double shotIntervalSec = DEFAULT;                // least time between two shots (0.25)
-        public static double shotDropRpm = DEFAULT;                    // a drop of more than this below the target = a shot (150). A ball takes only ~70 off the weighted wheel: not seen, so each feed runs feedSec. Change it only if the R1 Wobble Tuner's Suggest line gives a number
+        public static double shotDropRpm = DEFAULT;                    // a drop of more than this below the target = a shot (150). A ball takes ~230 off the 2-weight wheel at 2630 (Wobble Tuner 2026-11-21: Suggest says keep 150). Change it only if the R1 Wobble Tuner's Suggest line gives a number
         public static boolean sprayEnabled = true;                     // RB tap, then press and hold: fires as fast as it can (no speed wait); also the last 5 s of TeleOp
         public static double maxFiringQueue = DEFAULT;                 // fire presses that may wait (4; 0 = no queue: a press during a shot is ignored)
         public static double ejectRpm = 600;                           // Y double-tap: the low speed that pushes one POLLEN out of the robot (library 600). Tune: just clears the robot
