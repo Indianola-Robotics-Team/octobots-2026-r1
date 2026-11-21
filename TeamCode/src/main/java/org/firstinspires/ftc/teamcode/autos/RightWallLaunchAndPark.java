@@ -27,18 +27,26 @@ import org.firstinspires.ftc.teamcode.Robot;
  */
 @Autonomous(name = "R1 Right Wall: Launch, Park Right", preselectTeleOp = "R1 TeleOp")
 public class RightWallLaunchAndPark extends Auto<Robot> {
+    static final double STEADY_SEC = 0.75;   // READY this long in a row before each fire step
+
     @Override
     protected void steps(Steps s, Robot robot) {
         robot.spinAtStart = true;      // the flywheel starts at START: at speed by the first shot
         robot.deployAtStart = false;   // the back is on the wall: the intake is pushed over while it drives away
         s.start("Back on R wall, 3rd tile, centred, facing HIVE", 62, -11.8, 90)
          .aimAtGoal("Aim at the up CELL", 2)   // the camera turns the robot to the goal (2 s at most; not seen: it goes on)
-         .action(robot.launcher.fireAction(2), 6)
+         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)   // the wheel at a steady speed first (not still speeding up)
+         .action(robot.launcher.fireAction(1), 3)
+         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)   // the wheel at a steady speed first (not still speeding up)
+         .action(robot.launcher.fireAction(1), 3)
          // Bump: the back is on the wall, so out 2 in slowly, then back to the wall fast. The quick move back
          // rolls the last two POLLEN forward into the feeder.
          .forward("Bump out", 2, 0.3)
          .back("Bump back", 2, 1.0)
-         .action(robot.launcher.fireAction(2), 6)   // the last two (fire all would feed 4 times: 2 empty feeds lose 2 s)
+         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)   // the wheel at a steady speed first (not still speeding up)
+         .action(robot.launcher.fireAction(1), 3)   // the last two, one at a time
+         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)   // the wheel at a steady speed first (not still speeding up)
+         .action(robot.launcher.fireAction(1), 3)
          .parkWithSeconds(10)
          .alongside(Actions.deployIntake(robot))
          .turnTo("Back to the start heading", 0, 0.5)   // the aim turned it a little: the park moves need the start heading

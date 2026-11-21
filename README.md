@@ -171,8 +171,8 @@ distance, as in the TeleOp (`Tunables.Launcher.speedByDistance`).
 - **Right Wall:** slide 35.8 in off the wall toward ours, then 64.1 in past the HIVE's frame to the zone's
   right corner.
 - **Left Wall:** wait 15 s first; after firing, 8 in forward (clear of the FLOWER), then 42.3 in to the
-  zone's left corner. `parkWithSeconds(8)` keeps time for the park if firing is slow (the feeder wheel and
-  arm take longer a shot than the old feeder: with 10 s, the 4th shot was cut short after the 15 s wait).
+  zone's left corner. `parkWithSeconds(6)`: the park takes about 4 s, and the rest of the time goes to the
+  four shots (each waits for a steady wheel: `Actions.steadyWheel`).
 
 **Check them** (from the `ftc-helper-lib` folder): `r1-auto.sim` (Right Corner), `r1-auto-right.sim`,
 `r1-auto-left.sim` (`./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-auto.sim`, and so on). Each

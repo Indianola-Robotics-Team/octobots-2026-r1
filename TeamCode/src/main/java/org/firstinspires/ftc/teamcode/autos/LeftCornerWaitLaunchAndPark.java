@@ -32,6 +32,8 @@ import org.firstinspires.ftc.teamcode.Robot;
  */
 @Autonomous(name = "R1 Left Corner: Wait for Tip, Launch, Park", preselectTeleOp = "R1 TeleOp")
 public class LeftCornerWaitLaunchAndPark extends Auto<Robot> {
+    static final double STEADY_SEC = 0.75;   // READY this long in a row before each fire step
+
     @Override
     protected void steps(Steps s, Robot robot) {
         robot.spinAtStart = true;      // the flywheel starts at START: at speed by the first shot
@@ -39,12 +41,18 @@ public class LeftCornerWaitLaunchAndPark extends Auto<Robot> {
         s.start("Back corner in L corner, front at HIVE", -58.4, -58.4, -44.7)
          .waitForGoal("Wait for the tip")
          .aimAtGoal("Aim at the up CELL", 2)
-         .action(robot.launcher.fireAction(2), 6)
+         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)   // the wheel at a steady speed first (not still speeding up)
+         .action(robot.launcher.fireAction(1), 3)
+         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)   // the wheel at a steady speed first (not still speeding up)
+         .action(robot.launcher.fireAction(1), 3)
          // Bump: the back is in the corner, so out 2 in slowly, then back fast. The quick move back
          // rolls the last two POLLEN forward into the feeder.
          .forward("Bump out", 2, 0.3)
          .back("Bump back", 2, 1.0)
-         .action(robot.launcher.fireAction(2), 6)   // the last two (fire all would feed 4 times: 2 empty feeds lose 2 s)
+         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)   // the wheel at a steady speed first (not still speeding up)
+         .action(robot.launcher.fireAction(1), 3)   // the last two, one at a time
+         .action(Actions.steadyWheel(robot, STEADY_SEC), 4)   // the wheel at a steady speed first (not still speeding up)
+         .action(robot.launcher.fireAction(1), 3)
          .parkWithSeconds(4)
          .alongside(Actions.deployIntake(robot))
          .moveWithTurn("To the LOADING ZONE", 12, -21, -45.3, 0.6);

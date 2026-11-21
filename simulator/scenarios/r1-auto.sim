@@ -27,7 +27,7 @@ expect within 20 screen has "To the LOADING ZONE"   # the last step is running..
 expect time < 25                           # ...well inside the 30 s (seconds since START)
 expect within 5 phase STOPPED              # and the autonomous ends by itself
 wait 0.5
-expect screen has "Fire 2: done (2 fired)"
+expect screen has "Fire 1: done (1 fired)"
 expect screen has "Bump back: done"
 expect screen not "timed out"              # both fire steps ended by themselves (launched >= 4 above counts the shots)
 expect screen has "To the LOADING ZONE: done"
