@@ -1,5 +1,6 @@
 # Robot 1's webcam sees our HIVE's tags, and the right stick click turns the robot to the HIVE.
 robot ../robot.properties
+set tunable Aim.cameraOffset 0     # this test starts at no bias, whatever the real robot needs (the sim camera is straight)
 init "R1 TeleOp"
 press g1.b                             # in INIT: B = RED
 set pose 57 -13 100                    # after INIT (a TeleOp's INIT puts the robot on its start spot): RED side, turned 10 degrees left of the HIVE: its tags are in view

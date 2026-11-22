@@ -50,7 +50,11 @@ public class Tunables {
     /** kP and kF are goBILDA's tested numbers for this robot (from their starter code); speedRpm is ours. */
     public static class Launcher {                                     // "launcher" in the configuration
         public static double speedRpm = 2630;                          // TeleOp and autos 2-3 shot speed (auto 1 has its own; goBILDA had 2679)
-        public static double[][] speedByDistance = {{27,2500},{32,2600},{38,2680},{45,2960},{50,3075},{73,3340}};
+        // MEASURED (2026-11-21, the team's last table): 27 to 45 in.
+        // PROJECTED, not shot: the first and last rows only continue the line of the two measured rows next to them
+        // (below 27 in: 10 RPM an inch; above 45 in: 34.5 RPM an inch). Past 100 in the speed stops rising (near the motor's limit).
+        // Changed or added a measured row at either end? Work that projected row out again.
+        public static double[][] speedByDistance = {{0,2230},{27,2500},{32,2550},{35,2615},{41,2780},{45,2918},{100,4815.5}};
         public static double stepRpm = 50;                             // speed change per D-pad press (library default 100)
         public static double readyBandRpm = 100;                       // "at speed" = this close to the target (library 60: at 3450 the wheel sat near 3429 and seldom fired)
         public static double distanceSmoothSec = 0.3;                  // ease the speed into each new camera distance (0 = off): its wobble no longer restarts READY
@@ -88,6 +92,6 @@ public class Tunables {
         public static double toleranceDeg = 1.5;                       // aimed = within this many degrees (library 2): the CELL leaves less room from an angle
         public static boolean angleAim = false;                        // aim into the CELL's opening, not at its tags. OFF until tested on the robot (A in TeleOp turns it on to try; then set true here)
         public static double goalFrontIn = 3;                          // the opening is this far in front of the tags under it (from the field CAD)
-        public static double cameraOffset = 0;                         // aim bias, degrees: + = the robot points more RIGHT. D-pad left/right change it 0.5 a press
+        public static double cameraOffset = -10;                         // aim bias, degrees: + = the robot points more RIGHT. D-pad left/right change it 0.5 a press
     }
 }

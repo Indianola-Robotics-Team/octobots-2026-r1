@@ -2,6 +2,7 @@
 # Run it: from the ftc-helper-lib folder:
 #   ./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-aim-bias.sim
 robot ../robot.properties
+set tunable Aim.cameraOffset 0     # this test starts at no bias, whatever the real robot needs (the sim camera is straight)
 init "R1 TeleOp"
 set pose 56 40 -180
 start
