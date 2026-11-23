@@ -25,7 +25,7 @@ public class BasicMove extends Auto<Robot> {
     // The menu steps. Make them bigger if choosing takes too long.
     static final double DISTANCE_STEP_IN = 1, DIRECTION_STEP_DEG = 5;
     // The direction chosen now (the steps are read again each time the drivers change a line).
-    private volatile double directionDeg;
+    private volatile double directionDeg, inches;
 
     @Override
     protected void steps(Steps s, Robot robot) {
@@ -34,6 +34,7 @@ public class BasicMove extends Auto<Robot> {
         double inches = s.number(DISTANCE);
         double directionDeg = s.number(DIRECTION);
         this.directionDeg = directionDeg;
+        this.inches = inches;
         s.start("Placed by hand: the chosen line takes it where it must go", 0);
         if (inches > 0) s.move("Move " + (int) inches + " in at " + (int) directionDeg + " deg", inches, directionDeg, 0.5);
     }
@@ -43,7 +44,7 @@ public class BasicMove extends Auto<Robot> {
     protected void atInit(Robot robot) {
         robot.duringInit(() -> {
             robot.show("Direction help", "90 = LEFT, -90 = RIGHT, 0 = forward, 180 = back (from the robot's front)");
-            robot.show("Direction now", "drives " + words(directionDeg));
+            robot.show("Direction now", inches > 0 ? "drives " + words(directionDeg) : "does not move (distance 0)");
         });
     }
 
