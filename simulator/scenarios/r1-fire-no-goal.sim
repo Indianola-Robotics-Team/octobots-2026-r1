@@ -1,0 +1,18 @@
+# Robot 1 (continuousOnHold = true): no goal in view = no group. Holding RB feeds nothing and says why.
+robot ../robot.properties
+set tunable Aim.cameraOffset 0
+init "R1 TeleOp"
+press g1.b                             # RED
+set pose 56 40 -180                    # facing away from our HIVE: the camera sees no goal
+start
+wait 4
+hold g1.rb
+expect within 1.5 screen has "Fire : NOT yet. Let go to cancel."
+expect within 1 screen has "Problem : goal NOT seen"
+wait 1.5
+expect launched = 0                    # nothing fed
+release g1.rb
+wait 0.5
+expect launched = 0
+stop
+expect error none

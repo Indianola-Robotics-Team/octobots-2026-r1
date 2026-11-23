@@ -1,0 +1,15 @@
+# Robot 1 (continuousOnHold = true): a TAP on RB fires ONE ball, never a stream.
+robot ../robot.properties
+set tunable Aim.cameraOffset 0         # the simulator's camera is straight
+init "R1 TeleOp"
+press g1.b                             # RED
+set pose 57 -13 90                     # about 35 in from our HIVE, facing it
+start
+wait 4                                 # the flywheel spins up at START
+press g1.rb                            # a tap (shorter than holdSec, 0.3 s)
+expect within 4 launched = 1
+wait 2
+expect launched = 1                    # one tap, one ball
+expect screen not "feeder RUNNING"
+stop
+expect error none

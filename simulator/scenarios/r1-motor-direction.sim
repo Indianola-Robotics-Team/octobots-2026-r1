@@ -4,7 +4,7 @@ init "Tune and check"
 press g1.dpad_down                         # from Hardware Check to Motor Direction Check
 press g1.a                                 # open it
 start
-expect within 1 screen has "(reversed)"    # the library reverses the left side
+expect within 1 screen has "(reversed in code)"    # the library reverses the left side
 hold g1.x                                  # front left
 expect within 1 screen has "RUNNING"
 expect motor front_right power = 0 0.01

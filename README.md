@@ -34,9 +34,12 @@ STOP, then INIT, for the next one. For robot 1 it lists the **Hardware Check** (
 motor turns, the IMU), the **Motor Direction Check** (robot on a block: X = front left, Y = front right,
 A = back left, B = back right; each wheel must roll toward the launcher, with our drive's directions from
 `Robot.java`), the **Servo Finder** (the deploy servo's positions), the **Flywheel Finder** (the
-launcher's kP..kF), the **Feed Time Finder** (the feed wheels' `feedSec`, from test shots), the **Drive Tuner** (the wheel size and the strafe correction, for the autonomous) and the **Shot Tuner** (not
-used by robot 1: it shoots from one spot). They show the lines to copy into `Tunables.java` or
-`Robot.java`. No finder files of our own: the library has them all.
+launcher's kP..kF), the **Flywheel Tuner** (no balls: compares PID and bang-bang speed control, on a full and
+a low battery), the **Feed Time Finder** (the feed wheels' `feedSec`, from test shots), the **Drive Tuner** (the wheel size and the strafe correction, for the autonomous), the **Shot Tuner** (the shot
+table: the speed for each distance) and the **Group Shot Tuner** (real balls: groups of 4 at 27, 36 and 45 in
+with the Flywheel Tuner's best settings; it says which one scores every ball). They show the lines to copy into `Tunables.java` or
+`Robot.java`. No finder files of our own: the library has them all. The two new tuners are on this test
+branch only: run them in the order of `doc/first-robot-test.md`.
 The full first-time order, with what "pass" means at each step: the team pages' Part C,
 "The first robot sessions" (https://crossbotics.com/teams/8938-octobots/robot/).
 How: [Tuning](https://crossbotics.com/ftc-helper/docs/tuning/).
@@ -68,11 +71,21 @@ click reverse drive** on/off (the back is the front; two buzzes = on). Field-cen
 driver, not vetted yet): hold **RT**, then click the right stick. **LB** intake on/off,
 double-tap LB pushes out until the next tap (both feed wheels turn backward too; the intake starts by itself
 once it is deployed). The flywheel spins up at START and stays at speed. **B** switches it off and on; off,
-**RB** still fires (it spins up, fires, and switches off again). **RB** fires one POLLEN (hold to keep
-firing; tap, then press and hold: SPRAY, as fast as it can, also in the last 5 s), D-pad up/down flywheel speed
+**RB** still fires (it spins up, fires, and switches off again). **RB** (test branch, `continuousOnHold = true`):
+a **tap** fires one POLLEN; **hold** = Continuous fire: the robot turns to the HIVE, waits until it is aimed
+and the wheel is READY, then feeds every POLLEN with no break until you let go (letting go stops the feed at
+once; no goal, not aimed or not READY: nothing feeds, and the screen says why); **tap, then press and hold**:
+SPRAY, as fast as it can, also in the last 5 s. Back to the old hold (repeated quick shots): set
+`continuousOnHold = false` in `Tunables.Launcher`. D-pad up/down flywheel speed
 (50 RPM a press). **X** deploys the intake again. **BACK** pauses
 everything (again: go on). **GUIDE** shows this map (hold GUIDE 1 s after START, PRACTICE profile: the
 tuning menu). Free: A, D-pad right and left. Both gamepads buzz at 1:00, 1:40 and 1:59.
+**The shot table** (`Tunables.Launcher.speedByDistance`): only the 5 measured rows, 27 to 45 in
+(`{27,2500},{32,2550},{35,2615},{41,2780},{45,2918}`). Closer than 27 or farther than 45, the library continues
+the line of the two end rows by itself (`extendTableEnds = true`), never past `extendMaxRpm = 4800`; the
+screen then says `estimated`. A new measured row at either end moves the estimate with it.
+**Speed control** (`speedControl`): `"PID"`, as before. `"BANG_BANG"` is there to test; change it only when
+the Group Shot Tuner says bang-bang scores better.
 **Four pieces at most** (rule G407): nothing in the code stops the intake at 4 (`holds(4)` only tells
 the simulator), so the driver taps **LB** (intake off) when the robot is full.
 
@@ -139,9 +152,13 @@ and heading count from the START heading, counterclockwise too.
 way, or into the park area. In INIT, choose with the D-pad (up/down = the line, left/right = change it):
 
 - **Start delay:** 0 to 25 s, the wait after START.
-- **Distance (in):** 0 to 96, in 6 in steps (24 at the start).
-- **Direction (deg):** the way to drive, from the robot's front: **0 = forward, 90 = LEFT, -90 = RIGHT,
-  180 = back**, and the 45s between them. The INIT screen shows this reminder too. The robot does not turn.
+- **Distance (in):** 0 to 96, in 1 in steps (24 at the start).
+- **Direction (deg):** the way to drive, from the robot's front, in 5 degree steps: **0 = forward,
+  90 = LEFT, -90 = RIGHT, 180 = back**. The INIT screen shows this reminder and the direction in words
+  ("Direction now: drives about forward-left"). The robot does not turn.
+
+Tap left/right for one step. Hold it to step fast. To change the step sizes, edit `DISTANCE_STEP_IN` and
+`DIRECTION_STEP_DEG` in `BasicMove.java`.
 
 Place the robot so that the one straight line takes it where it must go. Measure the line on the field first.
 `simulator/scenarios/r1-basic-move.sim` checks it.
@@ -168,8 +185,8 @@ distance, as in the TeleOp (`Tunables.Launcher.speedByDistance`).
 **Routes** (after firing; the intake is pushed over during the first move):
 - **Right Corner:** slide 9.4 in straight away from our wall (clear of our FLOWER), then 74.5 in to the
   zone's right corner, turning to face left on the way.
-- **Right Wall:** slide 35.8 in off the wall toward ours, then 64.1 in past the HIVE's frame to the zone's
-  right corner.
+- **Right Wall:** 48.5 in off the wall (at 53 degrees: forward and to the left), then 60 in (at 10 degrees)
+  past the HIVE's frame to the zone's right corner.
 - **Left Wall:** wait 15 s first; after firing, 8 in forward (clear of the FLOWER), then 42.3 in to the
   zone's left corner. `parkWithSeconds(6)`: the park takes about 4 s, and the rest of the time goes to the
   four shots (each waits for a steady wheel: `Actions.steadyWheel`).
@@ -261,6 +278,18 @@ robot configuration. INIT says it is off, the flywheel still spins, and RB feeds
 checks this (`set device feeder_left missing`, `set device feeder_right missing`).
 
 The feed wheels: `r1-feed-wheels.sim` (one RB, one POLLEN; both wheels run, then stop).
+
+The test branch's fire modes and tuners (Where: a terminal, in the `ftc-helper-lib` folder; run each file on
+its own, with `-PnoFromRobot`, so the robot file stays as it is):
+
+```bash
+./gradlew -PnoFromRobot :sim:scenario -Pfile=../simulator/scenarios/r1-fire-hold-group.sim
+```
+
+The same for `r1-fire-tap-one.sim` (a tap is one POLLEN), `r1-fire-no-goal.sim` (no goal: no group),
+`r1-fire-tap-hold-spray.sim` (tap, then hold: SPRAY), `r1-table-ends.sim` (the estimate past 27 and 45 in),
+`r1-bang-bang-start.sim` (bang-bang from START with a real hub's speed reading), `r1-flywheel-tuner.sim` and
+`r1-group-shot-tuner.sim` (nothing moves in INIT; any button stops them).
 
 Drive it in a browser (then open http://localhost:8780 and pick "R1 TeleOp"):
 

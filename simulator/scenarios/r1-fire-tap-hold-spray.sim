@@ -1,0 +1,17 @@
+# Robot 1 (continuousOnHold = true): tap RB, then press and hold = SPRAY, as before (not a group).
+robot ../robot.properties
+set tunable Aim.cameraOffset 0
+init "R1 TeleOp"
+press g1.b                             # RED
+set pose 56 40 -180                    # no goal in view: SPRAY does not wait for one
+start
+wait 4
+press g1.rb                            # tap...
+wait 0.1
+hold g1.rb                             # ...then hold
+expect within 1.5 screen has "Fire : SPRAY"
+expect screen not "Let go to cancel"   # not a group waiting for the aim
+expect within 4 launched >= 2
+release all
+stop
+expect error none

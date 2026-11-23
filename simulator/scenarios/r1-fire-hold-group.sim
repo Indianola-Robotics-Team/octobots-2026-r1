@@ -1,0 +1,25 @@
+# Robot 1 (test branch group-fire, continuousOnHold = true): hold RB = ONE group of Continuous fire.
+# The press aims and waits for READY, then the feed wheels run with no break; letting go stops them at once.
+# Run it: from the ftc-helper-lib folder:
+#   ./gradlew -PnoFromRobot :sim:scenario -Pfile=../simulator/scenarios/r1-fire-hold-group.sim
+robot ../robot.properties
+set tunable Aim.cameraOffset 0         # the simulator's camera is straight (the real robot needs its own bias)
+init "R1 TeleOp"
+expect screen has "hold: fire nonstop when aimed"
+press g1.b                             # in INIT: B = RED
+set pose 57 -13 90                     # about 35 in from our HIVE, facing it (after INIT: it puts the robot on its start spot)
+start
+wait 4                                 # the flywheel spins up at START (spinAtStart)
+hold g1.rb
+expect within 4 screen has "Fire : feeder RUNNING. Let go to stop."
+expect within 3 launched >= 2          # more than one ball from one press: no wait between balls
+print screen
+release g1.rb
+expect within 0.1 servo feeder_left power = 0    # let go: the feed wheels stop at once (the device, not only the screen)
+expect servo feeder_right power = 0
+expect within 0.2 screen not "feeder RUNNING"
+wait 1.5
+expect servo feeder_left power = 0     # and they never start again by itself
+expect screen not "feeder RUNNING"
+stop
+expect error none

@@ -7,9 +7,11 @@ expect screen has "Motor Direction Check"
 expect screen has "Encoder Check"
 expect screen has "Servo Finder"
 expect screen has "Flywheel Finder"
+expect screen has "Flywheel Tuner"            # PID and bang-bang (experimental)
 expect screen has "Feed Time Finder"           # two CR servo feed wheels, no feed stop
 expect screen has "Drive Tuner"
 expect screen has "Shot Tuner"
+expect screen has "Group Shot Tuner"         # groups of 4 with real balls: a launcher and a camera that sees the goal
 expect screen has "Move Tuner"
 expect screen not "Hood Finder"
 expect screen not "Motor Finder"

@@ -1,0 +1,19 @@
+# Robot 1 with speedControl BANG_BANG (not tuned: it starts from kF), from START, with a real hub's speed
+# reading (43 RPM steps, 0.05 s late) and slow loops (20 to 60 ms): it gets to READY and holds the speed.
+robot ../robot.properties
+set tunable Launcher.speedControl BANG_BANG
+set sensor launcher 43 0.05
+set loop 20 60
+init "R1 TeleOp"
+expect screen has "Run the Flywheel Tuner"     # INIT says it is not tuned yet
+press g1.b                             # RED
+set pose 58 -13 90                     # about 36 in from our HIVE
+start
+expect within 8 screen has "READY"
+expect motor launcher power >= 0       # bang-bang never brakes
+wait 2
+expect screen has "READY"
+expect motor launcher power >= 0
+expect motor launcher lowest >= 0      # and never below 0 at any moment since INIT
+stop
+expect error none

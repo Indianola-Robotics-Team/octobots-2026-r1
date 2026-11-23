@@ -1,0 +1,41 @@
+# Robot 1: the Wobble Tuner. Nothing moves at START: no intake, no flywheel, until a fresh press.
+# It says 10 s (what it does), asks for 5 shots before any line to copy, and help stops everything.
+robot ../robot.properties
+init "R1 Wobble Tuner"
+expect screen has "spins the flywheel"
+expect screen has "Nothing moves until you press a button."
+expect screen has "Safety glasses"
+hold g1.b                                  # held through START: not a press
+start
+wait 1.5
+expect motor launcher power = 0 0.01
+expect motor intake power = 0 0.01
+expect screen not "Deploy intake"
+release all
+wait 0.5
+expect motor launcher power = 0 0.01
+expect motor intake power = 0 0.01
+expect screen not "-0 RPM"                 # a wheel at rest is 0
+press g1.x                                 # the intake, only now
+expect within 1 motor intake power > 0.5
+press g1.b                                 # the flywheel, only now
+expect within 1 screen has "Flywheel ON"
+expect within 4 motor launcher velocity > 500
+expect screen has "of 10 s"
+expect screen not "of 20 s"
+expect within 22 screen has "Worst wobble"
+press g1.rb                                # one shot: not enough for a number
+expect within 6 screen has "Test shots : 1 of 5"
+expect screen not "public static double readyBandRpm"
+expect screen not "feed runs its feedSec"
+press g1.guide                             # help stops all of it
+expect within 1 screen has "help"
+expect motor launcher power = 0 0.01
+expect motor intake power = 0 0.01
+press g1.guide
+wait 0.5
+expect motor launcher power = 0 0.01       # and it never starts again by itself
+expect motor intake power = 0 0.01
+stop
+expect screen has "STOPPED"
+expect error none

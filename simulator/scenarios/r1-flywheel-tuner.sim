@@ -1,0 +1,27 @@
+# Robot 1: Tune and check > Flywheel Tuner. Nothing moves in INIT or at START; A starts it after a countdown;
+# any button stops it at once, and nothing starts again by itself.
+robot ../robot.properties
+init "Tune and check"
+press g1.dpad_down                     # Motor Direction Check
+press g1.dpad_down                     # Encoder Check
+press g1.dpad_down                     # Servo Finder
+press g1.dpad_down                     # Flywheel Finder
+press g1.dpad_down                     # Flywheel Tuner
+expect screen has "> Flywheel Tuner"
+press g1.a
+expect within 2 screen has "The flywheel runs at up to FULL power."
+wait 1
+expect motor launcher power = 0 0.01   # INIT moves nothing
+start
+wait 1
+expect motor launcher power = 0 0.01   # nor START
+press g1.a
+expect within 1 screen has "Starting in"
+expect within 6 motor launcher velocity > 300
+press g1.b                             # any button stops it
+expect within 0.5 screen has "STOPPED"
+expect motor launcher power = 0 0.01
+wait 2
+expect motor launcher power = 0 0.01   # nothing restarts by itself
+stop
+expect error none

@@ -1,0 +1,23 @@
+# Robot 1: the shot table has only the 5 measured rows (27 to 45 in). Outside them the library continues the
+# line of the two end rows (extendTableEnds), up to extendMaxRpm 4800, and the screen says "estimated".
+robot ../robot.properties
+set tunable Aim.cameraOffset 0
+init "R1 TeleOp"
+press g1.b                             # RED
+set pose 58 -13 90                     # about 36 in: inside the measured rows
+start
+expect within 3 screen has "Shot distance : 36 in (camera)"
+expect screen not "estimated"
+set pose 47 -13 90                     # about 25 in: closer than the first row (27 in)
+wait 1.5                               # the speed eases into the new distance (distanceSmoothSec)
+expect value "Shot distance" < 26.5
+expect screen has "in (camera), estimated"
+print screen
+set pose 48 30 150                     # about 48 in: farther than the last row (45 in)
+wait 1.5
+expect value "Shot distance" > 46
+expect screen has "in (camera), estimated"
+expect screen not "speed limited"      # far from the 4800 RPM limit
+print screen
+stop
+expect error none

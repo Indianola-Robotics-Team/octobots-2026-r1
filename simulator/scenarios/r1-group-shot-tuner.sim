@@ -1,0 +1,32 @@
+# Robot 1: Tune and check > Group Shot Tuner. Nothing moves in INIT or at START; at the first spot (27 in) A
+# starts a check shot after a countdown; any button stops it at once, and nothing starts again by itself.
+robot ../robot.properties
+set tunable Aim.cameraOffset 0         # the simulator's camera is straight
+init "Tune and check"
+press g1.dpad_up                       # the last tool
+expect screen has "> Group Shot Tuner"
+press g1.a
+expect within 2 screen has "It SHOOTS real balls. Safety glasses."
+press g1.b                             # RED
+expect screen has "Have 12 balls ready."
+expect screen has "Aim offset : 0.0 deg, from the code: OK"
+wait 1
+expect motor launcher power = 0 0.01   # INIT moves nothing
+start
+set pose 49 -13 90                     # about 27 in from our HIVE, facing it
+wait 1
+expect motor launcher power = 0 0.01   # nor START
+expect screen has "spot 1 of 3 (27.0 in)"
+expect within 2 screen has "Camera distance : 27"
+press g1.a                             # the robot is here
+expect within 1 screen has "Check shot 1 of 4, with today's settings."
+press g1.a                             # shoot
+expect within 1 screen has "Starting in"
+expect within 6 motor launcher velocity > 300
+press g1.y                             # any button stops it
+expect within 0.5 screen has "STOPPED"
+expect motor launcher power = 0 0.01
+wait 2
+expect motor launcher power = 0 0.01   # nothing restarts by itself
+stop
+expect error none

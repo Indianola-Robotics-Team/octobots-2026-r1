@@ -50,18 +50,23 @@ public class Tunables {
     /** kP and kF are goBILDA's tested numbers for this robot (from their starter code); speedRpm is ours. */
     public static class Launcher {                                     // "launcher" in the configuration
         public static double speedRpm = 2630;                          // TeleOp and autos 2-3 shot speed (auto 1 has its own; goBILDA had 2679)
-        // MEASURED (2026-11-21, the team's last table): 27 to 45 in.
-        // PROJECTED, not shot: the first and last rows only continue the line of the two measured rows next to them
-        // (below 27 in: 10 RPM an inch; above 45 in: 34.5 RPM an inch). Past 100 in the speed stops rising (near the motor's limit).
-        // Changed or added a measured row at either end? Work that projected row out again.
-        public static double[][] speedByDistance = {{0,2230},{27,2500},{32,2550},{35,2615},{41,2780},{45,2918},{100,4815.5}};
+        // MEASURED (2026-11-21, the team's last table): 27 to 45 in. Only measured rows here.
+        // Closer than 27 or farther than 45: the library continues the line of the two end rows by itself
+        // (extendTableEnds), never past extendMaxRpm. The Driver Station then says "estimated".
+        // Add a measured row at either end and the estimate moves with it: nothing else to work out.
+        public static double[][] speedByDistance = {{27,2500},{32,2550},{35,2615},{41,2780},{45,2918}};
+        public static boolean extendTableEnds = true;                  // continue the table past its first and last rows (library: false)
+        public static double extendMaxRpm = 4800;                      // an estimate never asks more than this (the 6000 RPM motor with our 2-weight wheel)
         public static double stepRpm = 50;                             // speed change per D-pad press (library default 100)
         public static double readyBandRpm = 100;                       // "at speed" = this close to the target (library 60: at 3450 the wheel sat near 3429 and seldom fired)
         public static double distanceSmoothSec = 0.3;                  // ease the speed into each new camera distance (0 = off): its wobble no longer restarts READY
         public static boolean lockSpeedWhileFiring = true;            // a shot that waits keeps its speed (the camera's distance cannot move it)
         public static double idleRpm = DEFAULT;                        // speed between shots, 0 = stop (0)
         public static double shotIntervalSec = DEFAULT;                // least time between two shots (0.25)
-        public static double shotDropRpm = DEFAULT;                    // a drop of more than this below the target = a shot (150). A ball takes ~230 off the 2-weight wheel at 2630 (Wobble Tuner 2026-11-21: Suggest says keep 150). Change it only if the R1 Wobble Tuner's Suggest line gives a number
+        public static double shotDropRpm = DEFAULT;                    // a drop of more than this below the target = a shot (150). A ball takes ~230 off the 2-weight wheel at 2630 (Wobble Tuner 2026-11-21: Suggest says keep 150). Change it only when the R1 Wobble Tuner's result (after 5 shots) gives a shotDropRpm line
+        // ballDropRpm: the speed ONE real ball takes off the wheel. Only the Flywheel Tuner and the Group Shot Tuner
+        // use it (their pretend shot); shot counting keeps shotDropRpm. 230: Wobble Tuner, 2026-11-21, at 2630 RPM.
+        public static double ballDropRpm = 230;
         public static boolean sprayEnabled = true;                     // RB tap, then press and hold: fires as fast as it can (no speed wait); also the last 5 s of TeleOp
         public static double maxFiringQueue = DEFAULT;                 // fire presses that may wait (4; 0 = no queue: a press during a shot is ignored)
         public static double ejectRpm = 600;                           // Y double-tap: the low speed that pushes one POLLEN out of the robot (library 600). Tune: just clears the robot
@@ -72,6 +77,14 @@ public class Tunables {
         public static double kF = 12.08;                               // speed control: steady power (2-weight wheel, 2026-11-21: Wobble Tuner avg +16 at 2630, +27 at 2530; 12.28 sat +55). With kI 0 this alone sets the steady speed: settles ABOVE the target = lower it, BELOW = raise it
         public static double nominalVolts = 13.0;                      // battery volts kF was found at (Flywheel Finder)
         public static boolean batteryCompensation = true;              // on: with kI 0, kF alone holds the speed, and kF's push changes with the battery (about 120 RPM a volt). Scales kF by nominalVolts / volts. Check READY on a full and a 12.2 V battery
+        // TEST BRANCH (group-fire): how the speed is held, and what holding RB does.
+        // speedControl: "PID" (the hub's own control, with kP kI kD kF above) or "BANG_BANG" (full power when slow,
+        // a steady power near the speed, coast above it). Untuned bang-bang starts from kF; the Flywheel Tuner gives
+        // its six bang... lines. Change it only after the Group Shot Tuner says which one scores. Back to today: "PID".
+        public static String speedControl = "PID";
+        // continuousOnHold: hold RB = aim, wait for READY, then feed all balls with no break (Continuous fire).
+        // A tap = one ball, as before. Tap, then hold = SPRAY, as before. Back to the old hold (QUICK shots): false.
+        public static boolean continuousOnHold = true;
     }
 
     public static class Feeder {                                       // "feeder_left" and "feeder_right" in the configuration

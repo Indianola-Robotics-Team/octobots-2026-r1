@@ -1,20 +1,44 @@
 # Robot 1's basic move (autos/BasicMove.java): in INIT the drivers choose a start delay, a distance and a
-# direction (90 = left, -90 = right, from the robot's front); after START it waits, drives that line, and stops.
+# direction (90 = left, -90 = right, from the robot's front; 1 in and 5 deg per tap, hold to step fast); after START it waits, drives that line, and stops.
 # Run it: from the ftc-helper-lib folder:
 #   ./gradlew :sim:scenario -Pfile=../simulator/scenarios/r1-basic-move.sim
 robot ../robot.properties
 init "R1 Basic Move"
 expect screen has "Distance (in): 24"              # the starting choices
-expect screen has "Direction (deg): 0 forward"
+expect screen has "Direction (deg): 0"
+expect screen has "drives forward"
 expect screen has "90 = LEFT, -90 = RIGHT"        # the reminder while they choose
 press g1.dpad_down                                 # Start delay
 press g1.dpad_right
 press g1.dpad_right                                # 2 s
-press g1.dpad_down                                 # Distance: stays 24
-press g1.dpad_down                                 # Direction
+press g1.dpad_down                                 # Distance: 1 in per tap
+press g1.dpad_right
+expect screen has "Distance (in): 25"
+press g1.dpad_left                                 # back to 24
+press g1.dpad_down                                 # Direction: 5 deg per tap
 press g1.dpad_left
-press g1.dpad_left                                 # 0 forward -> -45 -> -90 right
-expect screen has "Direction (deg): -90 right"
+expect screen has "Direction (deg): -5"
+expect screen has "drives about forward"
+press g1.dpad_left
+press g1.dpad_left
+press g1.dpad_left
+press g1.dpad_left
+press g1.dpad_left
+press g1.dpad_left
+press g1.dpad_left
+press g1.dpad_left
+press g1.dpad_left
+press g1.dpad_left
+press g1.dpad_left
+press g1.dpad_left
+press g1.dpad_left
+press g1.dpad_left
+press g1.dpad_left
+press g1.dpad_left
+press g1.dpad_left
+expect screen has "Direction (deg): -90"         # 18 taps of 5 deg
+expect screen has "drives right"
+expect screen has "Distance (in): 24"
 expect screen has "Start delay: 2 s"
 start
 wait 1.5

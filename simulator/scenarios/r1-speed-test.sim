@@ -1,0 +1,38 @@
+# Robot 1: the Flywheel Speed Test. Nothing starts from a held button, and B stops the X test and a burst.
+robot ../robot.properties
+init "Flywheel Speed Test (one-off)"
+expect screen has "stop any test at once"
+expect screen has "Advanced: you can skip this test."
+expect screen has "NOT bangKs and bangKv"
+expect screen has "Do not copy them."
+hold g1.x                                  # held through START
+start
+wait 1
+expect motor launcher power = 0 0.01
+expect screen has "NOT bangKs and bangKv"
+release all
+wait 0.3
+press g1.x                                 # the power test
+expect within 1 screen has "Power test"
+wait 1
+press g1.b                                 # B ends it, in the middle
+expect within 0.5 screen has "You stopped the power test."
+expect motor launcher power = 0 0.01
+wait 3
+expect motor launcher power = 0 0.01       # the second power never comes
+expect screen not "Power test 2 of 2"
+press g1.b                                 # flywheel on
+expect within 1 screen has "Flywheel ON"
+wait 2
+press g1.rb                                # a burst of 4
+expect within 1 screen has "It is FIRING"
+wait 0.4
+press g1.b                                 # B ends it, in the middle
+expect within 0.5 screen has "You stopped the burst: not counted."
+expect motor launcher power = 0 0.01
+expect screen not "It is FIRING"
+print motors
+wait 2
+expect motor launcher power = 0 0.01
+stop
+expect error none
